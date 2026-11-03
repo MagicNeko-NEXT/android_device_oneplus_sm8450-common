@@ -189,18 +189,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/init/fstab.qcom:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/fstab.qcom
 
-# t16 for diagnostics: adb without authorization, to grab logs in the window when the device appears
-#   Basis: build/make/tools/post_process_props.py: ro.adb.secure=0 auto-enables USB adb
-#   Note: this only affects debuggability, not boot; remove it for release
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    ro.adb.secure=0
-
-# t17 for diagnostics: put this machine's adb public key at the vendor ramdisk root (/adb_keys)
-#   adbd reads /adb_keys as an extra authorized key source, independent of ro.adb.secure and /data
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/init/adb_keys:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/adb_keys \
-    $(LOCAL_PATH)/init/adb_keys:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/adb_keys
-
 # Init
 PRODUCT_PACKAGES += \
     fstab.qcom \
