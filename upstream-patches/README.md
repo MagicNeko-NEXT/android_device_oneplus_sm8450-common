@@ -1,70 +1,70 @@
-# upstream-patches —— 需要打在上游仓库上的本地改动
+# upstream-patches: local changes that must be applied to upstream repos
 
-这两个仓库**刻意不做 fork**（与上游的净差异只有百来行，不值得养一个仓库）。
-但改动本身是必需的 —— 尤其是 display 那一份，**没有它指纹就不工作**。
-所以改成 patch 存在这里：重建源码树后打上即可，既不丢改动，也不扩大与上游的差异。
+These repos are **deliberately not forked** (the net difference from upstream is only about a hundred lines, not worth maintaining a repo for).
+But the changes themselves are required; in particular, **without the display patch, fingerprint doesn't work**.
+So they are kept here as patches: apply them after rebuilding the source tree, which keeps the changes without widening the difference from upstream.
 
 ## 0001-display-sm8450-udfps-hbm-and-sdmext.patch
 
-**目标仓库**：`hardware/qcom-caf/sm8450/display`
-**上游基线**：`LineageOS/android_hardware_qcom_display` 的 `lineage-23.2-caf-sm8450`
-（本 patch 的 diff 基线是提交 `222878b`）
-**净差异**：14 个文件，+153 / -14
+**Target repo**: `hardware/qcom-caf/sm8450/display`
+**Upstream baseline**: `lineage-23.2-caf-sm8450` of `LineageOS/android_hardware_qcom_display`
+(this patch's diff baseline is commit `222878b`)
+**Net difference**: 14 files, +153 / -14
 
-内容分三块：
+It has three parts:
 
-1. **打通 UDFPS 的 hbm_enable 链路**（`OPLUS_FINGERPRINT_MASK`）
-   设备树里 `soong_config_set_bool(qtidisplay,oplus_udfps,true)` 一直是设的，
-   但 `Android.bp` 没有对应的 `soong_config_variables`，那段代码被**静默编译掉**。
-   补上变量与 cflags，并让 `HWDeviceDRM::SetupAtomic()` 扫描图层名、按需置
-   `OPLUS_OFP_PROPERTY_*` 位，经 DRM 连接器属性 `hbm_enable` 下发给内核。
-   没有这一步：`pressed_icon_status` 永不进 `ON_WR_PTR`，`waitUiready` 超时，
-   指纹录入永远是 `errno=15001`（= 10108 FP_ERR_FINGERUP_TOO_FAST）。
+1. **Connect the UDFPS hbm_enable path** (`OPLUS_FINGERPRINT_MASK`)
+   The device tree has always set `soong_config_set_bool(qtidisplay,oplus_udfps,true)`,
+   but `Android.bp` has no matching `soong_config_variables`, so that code is **silently compiled out**.
+   This adds the variable and cflags, and makes `HWDeviceDRM::SetupAtomic()` scan layer names and set
+   `OPLUS_OFP_PROPERTY_*` bits as needed, sent to the kernel through the DRM connector property `hbm_enable`.
+   Without this: `pressed_icon_status` never reaches `ON_WR_PTR`, `waitUiready` times out,
+   and fingerprint enrollment always ends with `errno=15001` (= 10108 FP_ERR_FINGERUP_TOO_FAST).
 
-2. **层名匹配只认关键字**，不照抄 sm8550 那套字面量。
-   sm8550 的 `"SurfaceView[UdfpsControllerOverlay](BLAST)"` 是 Android 14 时代的
-   名字；本树 A16 实测 buffer 名是
-   `VRI[SurfaceView[UdfpsControllerOverlay]]#N(BLAST Consumer)N`，照抄根本匹配不上。
+2. **Layer name matching uses keywords only**, instead of copying sm8550's literals.
+   sm8550's `"SurfaceView[UdfpsControllerOverlay](BLAST)"` is an Android 14 era
+   name; in this A16 tree the measured buffer name is
+   `VRI[SurfaceView[UdfpsControllerOverlay]]#N(BLAST Consumer)N`, so a copied literal would never match.
 
-3. **与跨代预编译 blob 共存的三个要害**
-   - `display_base`：没有 color manager 时 `SetColorTransform` 返回 `kErrorNone`。
-     本机 `libsnapdragoncolor-manager.so` 与源码不同代、加载即 SIGSEGV，所以
-     `color_manager.cpp` 刻意跳过 STC。若此处如实返回 `kErrorNotSupported`，
-     composer 会把 `color_tranform_failed_` 永久置位，
-     `PreValidateDisplay()` 每帧 `MarkLayersForClientComposition()` ——
-     **整个显示栈被打回 100% GPU 合成**。
-   - `comp_manager`：`IsDisplayHWAvailable()` 不去戳 blob 虚表，直接 `return true`。
-     该虚槽在 `resource_interface.h` 是接口最后一位，跨代 blob 的虚表比我们短一格，
-     调用即 `pc=0`。它唯一用途是 `enable_null_display_`，而本机永远有面板。
-   - `hw_device_drm`：探针收窄为「掩码跳变时才打」，避免每帧刷屏。
+3. **Three essentials for coexisting with prebuilt blobs from a different generation**
+   - `display_base`: `SetColorTransform` returns `kErrorNone` when there is no color manager.
+     This device's `libsnapdragoncolor-manager.so` is from a different generation than the source and SIGSEGVs on load, so
+     `color_manager.cpp` deliberately skips STC. If this returned `kErrorNotSupported` as-is,
+     composer would permanently set `color_tranform_failed_`, and
+     `PreValidateDisplay()` would call `MarkLayersForClientComposition()` every frame:
+     **the entire display stack is forced back to 100% GPU composition**.
+   - `comp_manager`: `IsDisplayHWAvailable()` doesn't touch the blob's vtable and simply does `return true`.
+     That slot is the last one in the interface in `resource_interface.h`, and the other-generation blob's vtable is one slot shorter than ours,
+     so calling it means `pc=0`. Its only use is `enable_null_display_`, and this device always has a panel.
+   - `hw_device_drm`: the probe is narrowed to "log only when the mask changes", to avoid log spam every frame.
 
-**应用方式**（在源码树根目录）：
+**How to apply** (from the source tree root):
 ```
 cd hardware/qcom-caf/sm8450/display
 git apply -p1 <path-to>/0001-display-sm8450-udfps-hbm-and-sdmext.patch
 ```
 
-**验证判据**（刷入后，一条都不靠猜）：
+**Verification** (after flashing, nothing left to guesswork):
 ```
-adb shell dumpsys SurfaceFlinger | grep usesDeviceComposition    # 应为 true
-adb logcat -d | grep "ofp-mask"                                  # 按压时应 0x1 <-> 0x3 跳变
-adb shell dmesg | grep HBM_ENABLE                                # 应出现 HBM_ENABLE:3
+adb shell dumpsys SurfaceFlinger | grep usesDeviceComposition    # should be true
+adb logcat -d | grep "ofp-mask"                                  # should toggle 0x1 <-> 0x3 on press
+adb shell dmesg | grep HBM_ENABLE                                # should show HBM_ENABLE:3
 adb shell 'cat /sys/kernel/oplus_display/fp_state'
 ```
 
 ## 0002-vendor-lineage-depmod-and-sched-param.patch
 
-**目标仓库**：`vendor/lineage`
-**上游基线**：`crdroidandroid/android_vendor_lineage` 的 `16.0`
-**净差异**：2 个文件，+33 / -3
+**Target repo**: `vendor/lineage`
+**Upstream baseline**: `16.0` of `crdroidandroid/android_vendor_lineage`
+**Net difference**: 2 files, +33 / -3
 
-- `build/tasks/kernel.mk`：depmod 的 unknown symbol 与 `BOOT_KERNEL_MODULES`
-  缺失检查改为受 `BOARD_KERNEL_MODULES_LOAD_ALLOW_MISSING` 控制。
-  设备树清单里用的是老模块名、而 gki-modules 已改名，老名字不存在会让
-  depmod 找不到符号、依赖链失败。
-- `tools/clean_headers.sh`：处理 sched_param 头冲突。
+- `build/tasks/kernel.mk`: depmod unknown symbol and `BOOT_KERNEL_MODULES`
+  missing checks are now controlled by `BOARD_KERNEL_MODULES_LOAD_ALLOW_MISSING`.
+  The device tree list uses old module names while gki-modules has renamed them, and missing old names make
+  depmod fail to find symbols and break the dependency chain.
+- `tools/clean_headers.sh`: handles the sched_param header conflict.
 
-**应用方式**（在源码树根目录）：
+**How to apply** (from the source tree root):
 ```
 cd vendor/lineage
 git apply -p1 <path-to>/0002-vendor-lineage-depmod-and-sched-param.patch
@@ -72,80 +72,80 @@ git apply -p1 <path-to>/0002-vendor-lineage-depmod-and-sched-param.patch
 
 ## 0003-kernel-sm8450-ksm-fragment.patch
 
-**目标仓库**：`kernel/oneplus/sm8450`
-**上游基线**：`lineage-ovaltine-dev/android_kernel_oneplus_sm8450`（diff 基线 `cfcbf0579b5f`）
-**净差异**：1 个文件（新增），+10
+**Target repo**: `kernel/oneplus/sm8450`
+**Upstream baseline**: `lineage-ovaltine-dev/android_kernel_oneplus_sm8450` (diff baseline `cfcbf0579b5f`)
+**Net difference**: 1 file (new), +10
 
-- 新增 `arch/arm64/configs/vendor/oplus/ksm.config`，内容就只有一行 `CONFIG_KSM=y`。
-  KSM 在 `gki_defconfig` 与各 vendor fragment 里都没出现，`make gki_defconfig`
-  会让它落到内核默认值 `n`（产物 `.config` 里是 `# CONFIG_KSM is not set`），
-  于是 `/sys/kernel/mm/ksm` 整个目录不存在、运行时根本无法启用。
-  设备树的 `TARGET_KERNEL_CONFIG` 已把它追加到列表末尾覆盖默认值。
+- Adds `arch/arm64/configs/vendor/oplus/ksm.config`, containing only one line, `CONFIG_KSM=y`.
+  KSM appears in neither `gki_defconfig` nor any vendor fragment, so `make gki_defconfig`
+  leaves it at the kernel default `n` (the resulting `.config` has `# CONFIG_KSM is not set`),
+  so the whole `/sys/kernel/mm/ksm` directory is absent and it can't be enabled at runtime.
+  The device tree's `TARGET_KERNEL_CONFIG` already appends it to the end of the list to override the default.
 
-**应用方式**（在源码树根目录）：
+**How to apply** (from the source tree root):
 ```
 cd kernel/oneplus/sm8450
 git apply -p1 <path-to>/0003-kernel-sm8450-ksm-fragment.patch
 ```
 
-**配套改动**（都在设备树里，随本仓库提交，不需要 patch）：
+**Companion changes** (all in the device tree, committed with this repo, no patch needed):
 
-- `BoardConfigCommon.mk`：`TARGET_KERNEL_CONFIG` 追加 `vendor/oplus/ksm.config`
-- `init/init.kernel.post_boot-cape.sh`：新增 `configure_memory_extension()`，
-  按物理内存自适应启用：
-  - zram = `min(RAM x 50%, 6GB)`，下限 1GB，算法 lz4（16G 机型 → 6144MB）
-  - KSM：内存 ≤6GB 扫得勤（200 页 / 20ms），>6GB 温和（100 页 / 50ms），并开启零页合并
+- `BoardConfigCommon.mk`: `TARGET_KERNEL_CONFIG` appends `vendor/oplus/ksm.config`
+- `init/init.kernel.post_boot-cape.sh`: adds `configure_memory_extension()`,
+  enabling these adaptively based on physical memory:
+  - zram = `min(RAM x 50%, 6GB)`, minimum 1GB, lz4 algorithm (16G model → 6144MB)
+  - KSM: memory ≤6GB scans often (200 pages / 20ms), >6GB gently (100 pages / 50ms), with zero-page merging enabled
 
-  本机 `chip_family=0x82` 走 cape 分支，而原厂 cape 脚本里**没有 zram 段**
-  （只有 taro 版有 `configure_zram_parameters`），这正是 zram 一直没启用的原因。
-- `sepolicy/ksm.te` + `sepolicy/genfs_contexts`：给 `/sys/kernel/mm/ksm`
-  打专属 `sysfs_ksm` 标签，并授权 `vendor_qti_init_shell` 写入。
-  默认标签是通用 `sysfs`，而该域对通用 sysfs 只有读权限 —— 不加这条，
-  脚本写 `pages_to_scan` / `use_zero_pages` / `run` 会被 SELinux 静默拦下。
+  This device's `chip_family=0x82` takes the cape branch, and the stock cape script **has no zram section**
+  (only the taro version has `configure_zram_parameters`), which is exactly why zram was never enabled.
+- `sepolicy/ksm.te` + `sepolicy/genfs_contexts`: give `/sys/kernel/mm/ksm`
+  a dedicated `sysfs_ksm` label and allow `vendor_qti_init_shell` to write it.
+  The default label is generic `sysfs`, on which that domain has read-only access. Without this,
+  the script's writes to `pages_to_scan` / `use_zero_pages` / `run` are silently blocked by SELinux.
 
-**验证判据**（刷入后）：
+**Verification** (after flashing):
 ```
-adb shell ls -Z /sys/kernel/mm/ksm/run   # 应为 u:object_r:sysfs_ksm:s0
-adb shell cat /sys/kernel/mm/ksm/run     # 应为 1
-adb shell cat /proc/swaps                # 应挂着 /dev/block/zram0（本机 6144MB）
+adb shell ls -Z /sys/kernel/mm/ksm/run   # should be u:object_r:sysfs_ksm:s0
+adb shell cat /sys/kernel/mm/ksm/run     # should be 1
+adb shell cat /proc/swaps                # should list /dev/block/zram0 (6144MB on this device)
 ```
 
-> **刷机注意**：改 SELinux policy 后**必须连 `odm` 一起刷** —— 运行时加载的是
-> `/odm/etc/selinux/precompiled_sepolicy`，它不校验 vendor 的哈希，
-> 只刷 vendor 不会生效（2026-10-11 实测踩过这个坑）。
+> **Flashing note**: after changing SELinux policy you **must flash `odm` as well**. The policy loaded at runtime is
+> `/odm/etc/selinux/precompiled_sepolicy`, which doesn't check the vendor hash,
+> so flashing only vendor has no effect (hit this in testing on 2026-10-11).
 
-## 维护约定
+## Maintenance convention
 
-改这两个仓库时，**改完就把 patch 重新导一遍**（覆盖本目录下的同名文件），
-否则这里会慢慢和实际树脱节：
+When changing these repos, **re-export the patch right after** (overwriting the file of the same name in this directory),
+otherwise this directory slowly drifts from the actual tree:
 
 ```
-git -C hardware/qcom-caf/sm8450/display diff <上游基线>..HEAD -- . ':(exclude)*.before-*' \
+git -C hardware/qcom-caf/sm8450/display diff <upstream baseline>..HEAD -- . ':(exclude)*.before-*' \
   > device/oneplus/sm8450-common/upstream-patches/0001-display-sm8450-udfps-hbm-and-sdmext.patch
-git -C vendor/lineage diff <上游基线>..HEAD -- . ':(exclude)*.before-*' \
+git -C vendor/lineage diff <upstream baseline>..HEAD -- . ':(exclude)*.before-*' \
   > device/oneplus/sm8450-common/upstream-patches/0002-vendor-lineage-depmod-and-sched-param.patch
 ```
 
-> 注：display 仓库里曾有误提交的备份文件
-> `sdm/libs/core/comp_manager.cpp.before-t17-hwavail`（954 行），已于 2026-10-10 清理。
-> 导出命令仍保留 `:(exclude)*.before-*`，以免将来再被顺手提交的东西混进 patch。
+> Note: the display repo once had a mistakenly committed backup file,
+> `sdm/libs/core/comp_manager.cpp.before-t17-hwavail` (954 lines), cleaned up on 2026-10-10.
+> The export command keeps `:(exclude)*.before-*` so that stray commits like that don't end up in the patch.
 
 ---
 
-## 一键应用（幂等）
+## One-step apply (idempotent)
 
-重建源码树、或 `repo sync` 之后，跑一次即可：
+After rebuilding the source tree or running `repo sync`, run this once:
 
 ```
 bash device/oneplus/sm8450-common/upstream-patches/apply.sh
 ```
 
-- 会自己往上找到源码树根（认 `build/envsetup.sh`）；
-- **幂等**：已应用就跳过，不会重复打；
-- 上游代码若变了导致两边都对不上，它会明确报出来并让你人工核对，不会硬打；
-- 只看不动文件：`apply.sh --check`。
+- It finds the source tree root by walking up (looks for `build/envsetup.sh`);
+- **Idempotent**: skips what's already applied and never applies twice;
+- If upstream code has changed so that neither state matches, it reports that clearly and asks for a manual check rather than forcing the patch;
+- To check without changing files: `apply.sh --check`.
 
-这台机器的实测状态：
+Measured state on this machine:
 
 ```
 $ bash device/oneplus/sm8450-common/upstream-patches/apply.sh --check

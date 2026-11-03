@@ -129,10 +129,10 @@ PRODUCT_PACKAGES += \
     vendor.qti.hardware.display.composer-service
 endif
 
-# DPPS 运行时依赖：libdpps.so 的 DT_NEEDED 是 libtinyxml2-v34.so（OOS16 那一代 blob）。
-# hardware/lineage/compat 里已带这个 VNDK-34 prebuilt（vndk/v34/arm64），
-# 但 LineageOS/crDroid 默认不安装它；libdpps 走 dlopen 加载，构建期看不到该依赖，
-# 不显式安装就会变成「静默加载失败、DPPS 降级到 Dummy」。
+# DPPS runtime dependency: libdpps.so's DT_NEEDED is libtinyxml2-v34.so (OOS16 generation blob).
+# hardware/lineage/compat already has this VNDK-34 prebuilt (vndk/v34/arm64),
+# but LineageOS/crDroid don't install it by default; libdpps loads via dlopen, so the build can't see the dependency,
+# and without an explicit install the load fails silently and DPPS degrades to Dummy.
 PRODUCT_PACKAGES += \
     libtinyxml2-v34
 
@@ -176,27 +176,27 @@ PRODUCT_PACKAGES += \
     ipacm \
     IPACM_cfg.xml
 
-# t16: 把 fstab 也放进 vendor ramdisk 的 first_stage_ramdisk/
-#   为什么：AOSP 文档（vendor-boot-partitions）要求设备 fstab 放在
-#           $(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/，
-#           否则 first-stage init 找不到 fstab，根本走不到开机动画。
-#   参考 AOSP 自身用法（同一写法）：
+# t16: also put fstab in the vendor ramdisk's first_stage_ramdisk/
+#   Why: AOSP docs (vendor-boot-partitions) require the device fstab in
+#           $(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/,
+#           otherwise first-stage init can't find fstab and never reaches the boot animation.
+#   See AOSP's own usage (same form):
 #     device/google/cuttlefish/shared/minidroid/device.mk:107
 #     device/generic/goldfish/board/emu64a/details.mk:20
-#   为什么不用 prebuilt_etc：本树里 prebuilt_etc + vendor_ramdisk_available
-#           的写法产物只落到 vendor_ramdisk/system/etc/，构建图里
-#           完全没有 first_stage_ramdisk（实测命中 0）。
+#   Why not prebuilt_etc: in this tree prebuilt_etc + vendor_ramdisk_available
+#           only outputs to vendor_ramdisk/system/etc/, and the build graph
+#           has no first_stage_ramdisk at all (measured 0 matches).
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/init/fstab.qcom:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/fstab.qcom
 
-# t16 诊断用：让 adb 免授权，好在设备露头的窗口里抢日志
-#   依据：build/make/tools/post_process_props.py —— ro.adb.secure=0 时会自动开 USB adb
-#   注意：这只影响可调试性，不影响开机；正式发版应去掉
+# t16 for diagnostics: adb without authorization, to grab logs in the window when the device appears
+#   Basis: build/make/tools/post_process_props.py: ro.adb.secure=0 auto-enables USB adb
+#   Note: this only affects debuggability, not boot; remove it for release
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     ro.adb.secure=0
 
-# t17 诊断用：把本机 adb 公钥放进 vendor ramdisk 根（/adb_keys）
-#   adbd 会读 /adb_keys 作为额外授权键源，不依赖 ro.adb.secure，也不依赖 /data
+# t17 for diagnostics: put this machine's adb public key at the vendor ramdisk root (/adb_keys)
+#   adbd reads /adb_keys as an extra authorized key source, independent of ro.adb.secure and /data
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/init/adb_keys:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/adb_keys \
     $(LOCAL_PATH)/init/adb_keys:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/adb_keys
@@ -236,41 +236,41 @@ $(call soong_config_set,lineage_health,charging_control_charging_path,/sys/class
 PRODUCT_PACKAGES += \
     vendor.lineage.livedisplay-service.oplus
 
-# SunlightEnhancement 走 SDM backend，在 sm8450 + 现有 display blob 组合下会在 Init
-# 阶段直接 abort（Failed to initialize SDM backend），导致 livedisplay-service 反复重启。
-# 上游（Bruno Martins, 4d80841 / 49e4076）的做法是关掉它，HBM 交给 display config 管。
+# SunlightEnhancement uses the SDM backend; on sm8450 with the current display blobs it aborts during Init
+# (Failed to initialize SDM backend), so livedisplay-service restarts repeatedly.
+# Upstream (Bruno Martins, 4d80841 / 49e4076) disables it and leaves HBM to display config.
 $(call soong_config_set_bool,OPLUS_LINEAGE_LIVEDISPLAY_HAL,ENABLE_SE,false)
 
-# PictureAdjustment 走 SDM backend，SDMController 构造时 disp_api_init() 返回非 0，
-# 触发 LOG(FATAL) 导致 livedisplay-service 无限重启（见 tombstone: Failed to initialize SDM backend）。
-# 关掉它，让服务能起来。（上游无人修过，必须自己关）
-# [2026-11-01] 打开 PA 做验证：SDM 已被 composer 独占，预期 hctx_=0 静默失效，但不崩
-# [2026-11-01] PA 关闭：实测 PictureAdjustment::PictureAdjustment 在 backend 未就绪时
-# 直接 LOG(FATAL) abort（Abort message: PictureAdjustment backend not ready, exiting.），
-# 导致 livedisplay-service 无限 SIGABRT 并把 AF 一起拖死（同一 binary）。
-# 根因是 DRM master 被 composer 独占，PA 永远拿不到 SDM，故关闭。
+# PictureAdjustment uses the SDM backend; disp_api_init() returns non-zero when SDMController is constructed,
+# triggering LOG(FATAL) and an endless livedisplay-service restart (see tombstone: Failed to initialize SDM backend).
+# Disabled so the service can start. (Nobody fixed this upstream, so it has to be disabled here)
+# [2026-11-01] PA enabled for testing: composer holds SDM exclusively, expected hctx_=0 silent failure without a crash
+# [2026-11-01] PA disabled: testing showed PictureAdjustment::PictureAdjustment, when the backend isn't ready,
+# aborts directly via LOG(FATAL) (Abort message: PictureAdjustment backend not ready, exiting.),
+# causing endless livedisplay-service SIGABRT and taking AF down with it (same binary).
+# The root cause is composer holding the DRM master exclusively, so PA can never get SDM; hence disabled.
 $(call soong_config_set_bool,OPLUS_LINEAGE_LIVEDISPLAY_HAL,ENABLE_PA,false)
 
-# [2026-11-01] 打开 AntiFlicker（DC 调光/防闪烁）。只走 /dev/oplus_display 的 PWM_TURBO 与
-# DIMLAYER_BL_EN ioctl（驱动 panel_ioctls[] 均有实现），不碰 SDM backend。
+# [2026-11-01] AntiFlicker (DC dimming/anti-flicker) enabled. Uses only /dev/oplus_display PWM_TURBO and
+# DIMLAYER_BL_EN ioctls (both implemented in the driver's panel_ioctls[]), and doesn't touch the SDM backend.
 $(call soong_config_set_bool,OPLUS_LINEAGE_LIVEDISPLAY_HAL,ENABLE_AF,true)
 
-#   ENABLE_DM=false：本面板（BOE rm692e5）的 DTSI 里没有任何 mdss-dsi-seed-* 命令，
-#   IDisplayModes 走 PANEL_IOCTL_SET_SEED 是空转；更要紧的是 dm.xml 一进包，设备就带上
-#   lineagehardware:FEATURE_DISPLAY_MODES，Settings 里 display_settings.xml 的
-#   LineagePartsPreference(replacesKey="color_mode") 会把 AOSP 的「颜色」项顶掉，
-#   于是两边都用不了。撤掉它之后 AOSP ColorModePreference 才会出现，
-#   配合 config_availableColorModes=[0,7,9] 对应 SDM STC 实际提供的 NATIVE/SRGB/DISPLAY_P3。
+#   ENABLE_DM=false: this panel's (BOE rm692e5) DTSI has no mdss-dsi-seed-* commands,
+#   so IDisplayModes via PANEL_IOCTL_SET_SEED does nothing; more importantly, once dm.xml is in the package the device gets
+#   lineagehardware:FEATURE_DISPLAY_MODES, and in Settings display_settings.xml's
+#   LineagePartsPreference(replacesKey="color_mode") replaces AOSP's Colors entry,
+#   leaving neither usable. Only with it removed does AOSP's ColorModePreference appear,
+#   with config_availableColorModes=[0,7,9] matching the NATIVE/SRGB/DISPLAY_P3 that SDM STC actually provides.
 $(call soong_config_set_bool,OPLUS_LINEAGE_LIVEDISPLAY_HAL,ENABLE_DM,false)
 
-# AdaptiveBacklight（自动亮度增强 / CABC）。
-# 默认分支是空数组 ⇒ vintf_fragment 不进包、cflags 落成 -DENABLE_AB=false，
-# AIDL 接口 IAdaptiveBacklight 在 VINTF 里根本不存在 ⇒ framework 拿不到它，
-# 自动调光退化成没有背光增强的裸映射，表现就是迟钝、跳变。
-# 安全性依据（service.cpp）：
-#   SDMController 只在 (ENABLE_DM || ENABLE_PA) 时构造，AB 不在该条件内；
-#   AdaptiveBacklight 自身只做 open("/dev/oplus_display") + ioctl(CABC)，
-#   不碰 SDM backend ⇒ 不会复现 SE/PA 那种 Init abort 无限重启。
+# AdaptiveBacklight (auto brightness enhancement / CABC).
+# The default branch is an empty array ⇒ vintf_fragment isn't packaged and cflags become -DENABLE_AB=false,
+# so the AIDL interface IAdaptiveBacklight doesn't exist in VINTF ⇒ the framework can't get it,
+# and auto brightness degrades to a bare mapping without backlight enhancement, showing as sluggish and jumpy.
+# Why it's safe (service.cpp):
+#   SDMController is only constructed when (ENABLE_DM || ENABLE_PA), and AB isn't in that condition;
+#   AdaptiveBacklight itself only does open("/dev/oplus_display") + ioctl(CABC),
+#   and doesn't touch the SDM backend ⇒ the SE/PA style Init abort restart loop can't recur.
 $(call soong_config_set_bool,OPLUS_LINEAGE_LIVEDISPLAY_HAL,ENABLE_AB,true)
 
 # Media
@@ -459,8 +459,8 @@ $(call inherit-product, vendor/oneplus/sm8450-common/sm8450-common-vendor.mk)
 
 
 
-# ===== 2026-10-06 补 touch HAL：power HAL 反复拉 vendor.oplus.hardware.touch.IOplusTouch
-#       拉不到 → HintManagerService 永久阻塞 → system_server 服务初始化卡死 → 卡开机 =====
+# ===== 2026-10-06 touch HAL added: power HAL keeps requesting vendor.oplus.hardware.touch.IOplusTouch
+#       not found → HintManagerService blocks forever → system_server service init hangs → stuck at boot =====
 PRODUCT_PACKAGES += \
     vendor-oplus-hardware-touch-V2-service \
     touchDaemon \

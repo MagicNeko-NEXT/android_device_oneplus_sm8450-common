@@ -161,7 +161,7 @@ system/lib64/libziparchive.so:odm/lib64/libziparchive_odm.so;FIX_SONAME|d35e1e6b
 odm/bin/hw/vendor.oplus.hardware.charger-V6-service|8636a5d1dfe277cbd531f360a89f96e43105c279|413dcf1a486b321806c0f44c26c395670d2bd00e
 odm/etc/init/vendor.oplus.hardware.charger-V6-service.rc|178a0d37395cfb802722aafc116324c5bc0a7919
 odm/etc/vintf/manifest/manifest_oplus_charger_aidl.xml|08e707b23cf8949281b085c8154259eb9646777a
-# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: 该文件在 700 中不存在 -> 停用
+# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: file doesn't exist in 700 -> disabled
 # odm/firmware/fastchg/charge_time_config.csv|e5bcc378513cb42bcb071eef327c87920553b0c4
 odm/firmware/fastchg/charging_thermal_config_default.txt|f05642f06961f44288e350369f844405c4effdd4
 odm/lib64/libGaiaClient_vnd.so|7a2245252dd698122385a84e2e85e2ea0cb62f1a
@@ -325,27 +325,27 @@ vendor/lib64/libsnapdragoncolor-manager.so|092cbb36f76b1149c9186b7ae09ce89a5c3de
 vendor/lib64/libsnapdragoncolor-qdcm.so|79dfb4f2307585bd331dea882ed88c8f131e5838
 
 # Display (Pixelworks)
-# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: 该文件在 700 中不存在 -> 停用
+# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: file doesn't exist in 700 -> disabled
 # odm/bin/hw/vendor.pixelworks.hardware.display.iris-service
-# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: 该文件在 700 中不存在 -> 停用
+# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: file doesn't exist in 700 -> disabled
 # odm/bin/hw/vendor.pixelworks.hardware.feature.irisfeature-service
-# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: 该文件在 700 中不存在 -> 停用
+# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: file doesn't exist in 700 -> disabled
 # odm/bin/irisConfig
-# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: 该文件在 700 中不存在 -> 停用
+# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: file doesn't exist in 700 -> disabled
 # odm/etc/init/vendor.pixelworks.hardware.feature.irisfeature-service.rc
-# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: 该文件在 700 中不存在 -> 停用
+# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: file doesn't exist in 700 -> disabled
 # odm/etc/vintf/manifest/vendor.pixelworks.hardware.display.iris-service.xml
-# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: 该文件在 700 中不存在 -> 停用
+# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: file doesn't exist in 700 -> disabled
 # odm/etc/vintf/manifest/vendor.pixelworks.hardware.feature.irisfeature-service.xml
-# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: 该文件在 700 中不存在 -> 停用
+# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: file doesn't exist in 700 -> disabled
 # odm/lib64/libpwirisIoctlWrapper.so
-# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: 该文件在 700 中不存在 -> 停用
+# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: file doesn't exist in 700 -> disabled
 # odm/lib64/libpwiriscalibrate.so
-# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: 该文件在 700 中不存在 -> 停用
+# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: file doesn't exist in 700 -> disabled
 # odm/lib64/libpwirisservice.so
-# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: 该文件在 700 中不存在 -> 停用
+# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: file doesn't exist in 700 -> disabled
 # odm/lib64/libpwirissoft.so
-# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: 该文件在 700 中不存在 -> 停用
+# [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: file doesn't exist in 700 -> disabled
 # odm/lib64/libpwsoftirisPCS.so
 odm/lib64/libsnapdragoncolor-pxlw.so|34d722bf0d1feea5960413add73a85dcea5df905
 # vendor/lib64/libpwirisfeature.so|3e88351eb7f9222328c285a1c6448cffc7359aa3
@@ -1379,7 +1379,7 @@ vendor/lib64/libwfdutils_proprietary.so|87231edaec581a5b619da07dd163f297da1fae1c
 vendor/lib64/vendor.qti.hardware.wifidisplaysession@1.0.so;MODULE_SUFFIX=_vendor|dbd625e4f52efdecbefb4b34d9f2130548eff681
 vendor/lib64/vendor.qti.hardware.wifidisplaysessionl@1.0-halimpl.so|626e3908ee204d2d933d46ae934d1680a4de8e71
 
-# [t12 2026-10-05] 700 dump 里的 fastchg 新文件（替代已消失的 charge_time_config.csv）
+# [t12 2026-10-05] new fastchg files in the 700 dump (replacing the removed charge_time_config.csv)
 odm/firmware/fastchg/21842/bms_heating_config.txt|1deef85ff7c617f7ce6bcdd38d0b7b49904420de
 odm/firmware/fastchg/21842/charging_hyper_mode_config.txt|8ac25063a88bcb6ca289445426df1acde3f88726
 odm/firmware/fastchg/21842/charging_thermal_config_default.txt|d4aaa567294f57e2c3755f9a0e08d23c21f10b84

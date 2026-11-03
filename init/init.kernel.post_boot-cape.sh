@@ -39,24 +39,24 @@ function configure_read_ahead_kb_values() {
 }
 
 # ─────────────────────────────────────────────────────────────────────
-# 内存扩展：按物理内存自适应启用 zram（ovaltine 定制 · 2026-10-10）
+# Memory extension: enable zram adaptively based on physical memory (ovaltine custom, 2026-10-10)
 #
-# 2026-10-11 变更：KSM 段按主人指令关闭 —— 内核侧同步取消 CONFIG_KSM
-#   （BoardConfigCommon.mk 不再引用 vendor/oplus/ksm.config），本函数只留 zram。
+# 2026-10-11 change: KSM section disabled per the owner's instruction, with CONFIG_KSM also removed on the kernel side
+#   (BoardConfigCommon.mk no longer references vendor/oplus/ksm.config), so this function keeps only zram.
 #
-# 为什么加这一段：本机 chip_family=0x82 走 cape 分支，原厂 cape 脚本里
-# 没有 zram 段（taro 版才有 configure_zram_parameters），fstab 与 init rc
-# 也没有任何 zram 条目 —— 内核虽然编了 CONFIG_ZRAM/CONFIG_ZSMALLOC，
-# 运行时 disksize 却一直是 0，swap 从未启用。
-#   · zram = min(RAM x 50%%, 6GB)，下限 1GB，算法 lz4（低延迟）
-# 回退：删掉本函数与主流程里的 configure_memory_extension 调用即可。
+# Why this was added: this device's chip_family=0x82 takes the cape branch, and the stock cape script
+# has no zram section (only the taro version has configure_zram_parameters), and fstab and init rc
+# have no zram entries either: although the kernel builds CONFIG_ZRAM/CONFIG_ZSMALLOC,
+# disksize stays 0 at runtime and swap was never enabled.
+#   · zram = min(RAM x 50%%, 6GB), minimum 1GB, lz4 algorithm (low latency)
+# Rollback: delete this function and the configure_memory_extension call in the main flow.
 # ─────────────────────────────────────────────────────────────────────
 function configure_memory_extension() {
 	MemTotalStr=`cat /proc/meminfo | grep MemTotal`
 	MemTotal=${MemTotalStr:16:8}
 	let RamSizeGB="( $MemTotal / 1048576 ) + 1"
 
-	# ---- zram：压缩交换盘 ----
+	# ---- zram: compressed swap ----
 	let zRamSizeMB="( $RamSizeGB * 1024 ) / 2"
 	if [ $zRamSizeMB -gt 6144 ]; then
 		zRamSizeMB=6144
@@ -72,19 +72,19 @@ function configure_memory_extension() {
 		swapon /dev/block/zram0 -p 32758
 	fi
 
-	# ---- KSM：2026-10-11 按主人指令关闭，本段已移除 ----
-	# 内核不再编入 CONFIG_KSM，/sys/kernel/mm/ksm 不会存在。
-	# 恢复步骤：BoardConfigCommon.mk 的 KSM 片段引用加回 + apply.sh 里 0003 取消注释。
+	# ---- KSM: disabled 2026-10-11 per the owner's instruction, section removed ----
+	# The kernel no longer builds CONFIG_KSM, so /sys/kernel/mm/ksm won't exist.
+	# To restore: add the KSM fragment reference back to BoardConfigCommon.mk + uncomment 0003 in apply.sh.
 }
 
 # ─────────────────────────────────────────────────────────────────────
-# 网络拥塞控制：BBR（ovaltine 定制 · 2026-10-11）
+# Network congestion control: BBR (ovaltine custom, 2026-10-11)
 #
-# 内核侧由 vendor/oplus/lineage_net.config 编入 CONFIG_TCP_CONG_BBR=y，
-# 这一段把运行时默认切过去。fq 是 BBR 的推荐搭配队列，
-# gki_defconfig 已含 CONFIG_NET_SCH_FQ=y，这里一并设为默认 qdisc。
-# 回退：删掉本函数与主流程里的 configure_network_tuning 调用即可
-#       （内核侧回退见 BoardConfigCommon.mk 顶部注释）。
+# On the kernel side vendor/oplus/lineage_net.config builds in CONFIG_TCP_CONG_BBR=y,
+# and this section switches the runtime default to it. fq is the recommended queue for BBR,
+# and gki_defconfig already has CONFIG_NET_SCH_FQ=y, so it's set as the default qdisc here too.
+# Rollback: delete this function and the configure_network_tuning call in the main flow
+#       (for kernel-side rollback see the comment at the top of BoardConfigCommon.mk).
 # ─────────────────────────────────────────────────────────────────────
 function configure_network_tuning() {
 	if grep -qw bbr /proc/sys/net/ipv4/tcp_available_congestion_control 2>/dev/null; then

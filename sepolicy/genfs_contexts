@@ -1,2 +1,2 @@
-# KSM：给 /sys/kernel/mm/ksm 打专属标签（默认是通用 sysfs，没人能写）
+# KSM: dedicated label for /sys/kernel/mm/ksm (the default is generic sysfs, which nobody can write)
 genfscon sysfs /kernel/mm/ksm u:object_r:sysfs_ksm:s0

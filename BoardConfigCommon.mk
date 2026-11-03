@@ -155,10 +155,10 @@ BOARD_RAMDISK_USE_LZ4 := true
 BOARD_USES_GENERIC_KERNEL_IMAGE := true
 BOARD_USES_QCOM_MERGE_DTBS_SCRIPT := true
 TARGET_KERNEL_SOURCE := kernel/oneplus/sm8450
-# 2026-10-11：按主人指令关闭 KSM 内核支持 —— 移除 vendor/oplus/ksm.config 引用
-#            （片段文件保留在树里，恢复时把引用加回即可；补丁见 upstream-patches/0003）；
-#            同时启用 BBR 拥塞控制 —— 新增 vendor/oplus/lineage_net.config；
-#            KVM 虚拟化 —— 新增 vendor/oplus/kvm.config（2026-10-11 追加）。
+# 2026-10-11: KSM kernel support disabled per the owner's instruction: removed the vendor/oplus/ksm.config reference
+#            (the fragment stays in the tree, add the reference back to restore; patch in upstream-patches/0003);
+#            BBR congestion control also enabled: added vendor/oplus/lineage_net.config;
+#            KVM virtualization: added vendor/oplus/kvm.config (appended 2026-10-11).
 TARGET_KERNEL_CONFIG := gki_defconfig vendor/waipio_GKI.config vendor/oplus/waipio_GKI.config vendor/debugfs.config vendor/oplus/lineage_net.config vendor/oplus/kvm.config
 
 # Kernel modules
@@ -188,7 +188,7 @@ TARGET_KERNEL_EXT_MODULES := \
     qcom/opensource/wlan/qcacld-3.0/.qca6490
 
 
-# ===== 2026-10-05 同步 dev（lineage-ovaltine-dev）内核时补入：10T 的 oplus 外置模块 =====
+# ===== Added 2026-10-05 when syncing the dev (lineage-ovaltine-dev) kernel: 10T's out-of-tree oplus modules =====
 TARGET_KERNEL_EXT_MODULES += \
     oplus/kernel/cpu/thermal:kbuild \
     oplus/kernel/device_info/cs_press:kbuild \
@@ -253,7 +253,7 @@ VENDOR_SECURITY_PATCH := $(BOOT_SECURITY_PATCH)
 include device/qcom/sepolicy_vndr/SEPolicy.mk
 include hardware/oplus/sepolicy/qti/SEPolicy.mk
 
-# t32b: 把设备树自己的 sepolicy 目录注册进去（原本没有，导致自加的 .te 不会被编译）
+# t32b: registers the device tree's own sepolicy directory (it wasn't, so added .te files weren't compiled)
 BOARD_VENDOR_SEPOLICY_DIRS += device/oneplus/sm8450-common/sepolicy
 
 # Verified Boot
@@ -312,8 +312,8 @@ WPA_SUPPLICANT_VERSION := VER_0_8_X
 # Include the proprietary files BoardConfig.
 include vendor/oneplus/sm8450-common/BoardConfigVendor.mk
 
-# [xi-audiofix] 允许用 PRODUCT_COPY_FILES 覆盖预编译 ELF（音频栈）
+# [xi-audiofix] allow PRODUCT_COPY_FILES to override prebuilt ELFs (audio stack)
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 
-# 汐 2026-10-06：vendor.img 比分区大 64KB，提高 erofs 压缩级别以塞进分区
+# Xi 2026-10-06: vendor.img is 64KB larger than the partition, so raise the erofs compression level to fit
 BOARD_EROFS_COMPRESSOR := lz4hc,12
