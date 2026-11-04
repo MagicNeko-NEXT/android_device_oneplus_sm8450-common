@@ -197,7 +197,7 @@ PRODUCT_PACKAGES += \
     init.kernel.post_boot-cape.sh \
     init.kernel.post_boot-taro.sh \
     init.oplus.hw.rc \
-    init.oplus.hw.rc.recovery \
+    init.oplus.hw.recovery.rc \
     init.oplus.rc \
     init.qcom.early_boot.sh \
     init.qcom.rc \
