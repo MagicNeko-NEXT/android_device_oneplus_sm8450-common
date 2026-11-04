@@ -48,6 +48,8 @@ lib_fixups: lib_fixups_user_type = {
 }
 
 blob_fixups: blob_fixups_user_type = {
+    'system_ext/bin/horae': blob_fixup()
+        .replace_needed('libprotobuf-cpp-lite.so', 'libprotobuf-cpp-lite-21.12.so'),
     'system_ext/etc/seccomp_policy/tcmd.policy': blob_fixup()
         .add_line_if_missing('lseek: 1'),
     'system_ext/lib64/libwfdcommonutils.so': blob_fixup()

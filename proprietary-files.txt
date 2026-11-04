@@ -568,11 +568,11 @@ vendor/lib64/vendor.qti.hardware.qccvndhal@1.0.so;MODULE_SUFFIX=_vendor|bfddf0a2
 # Horae
 system/lib64/libostatslog.so:system_ext/lib64/libostatslog.so|99660c284c63f6f8c193649560e26e0622f4541c
 system/lib64/vendor.oplus.hardware.displaypanelfeature-V1-ndk.so:system_ext/lib64/vendor.oplus.hardware.displaypanelfeature-V1-ndk.so|3db4c42aebb3859915f700deed2552d22d3b764c
-system_ext/bin/horae;DISABLE_CHECKELF|507b8ca31559b6060fddd1696916f529343f78ce
+system_ext/bin/horae;DISABLE_CHECKELF|507b8ca31559b6060fddd1696916f529343f78ce|9abc0df75aa671416916fe0ecc97b930f6d91bcc
 system_ext/etc/horae/horae.conf|a09edd6f265102eaccbc89611bda68dc6046b80b
 system_ext/etc/horae/horae_SM8450.conf|12f304f16db9a3ebc27140644023f5cc8033675a
 system_ext/etc/horae/horae_SM8475.conf|9a613132ef65689e127b465712039a34a2c28832
-system_ext/etc/init/horae.rc|1c45b864586c833723ae6bd3ce5dba3949980679
+system_ext/etc/init/horae.rc|fc8b2a0becf5d9cec527df7c6974ff77de80f3a2
 system_ext/lib64/vendor.oplus.hardware.charger-V1-ndk.so|b012cfb5ec27c04e9de3f4b3879132c32b28e5d1
 system_ext/lib64/vendor.oplus.hardware.displaypanelfeature@1.0.so|29169972453d0430b496915f1e3a309da0adf089
 
