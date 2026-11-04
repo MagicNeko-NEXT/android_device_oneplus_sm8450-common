@@ -85,6 +85,9 @@ TARGET_KERNEL_SOURCE := kernel/oneplus/sm8450
 #            BBR congestion control also enabled: added vendor/oplus/lineage_net.config;
 #            KVM virtualization: added vendor/oplus/kvm.config (appended 2026-10-11).
 TARGET_KERNEL_CONFIG := gki_defconfig vendor/waipio_GKI.config vendor/oplus/waipio_GKI.config vendor/debugfs.config vendor/oplus/lineage_net.config vendor/oplus/kvm.config
+ifeq ($(TARGET_BUILD_VARIANT),userdebug)
+TARGET_KERNEL_CONFIG += vendor/oplus/bringup_debug.config
+endif
 
 # Kernel modules
 BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE := $(TARGET_KERNEL_SOURCE)/modules.vendor_blocklist.msm.waipio
