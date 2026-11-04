@@ -1,4 +1,0 @@
-# t32 diagnostic experiment: DRM won't open on this device; audit_enabled=0 means AVCs aren't logged,
-#   so having no composer denials in the log doesn't prove nothing was blocked.
-#   The composer domain is made permissive here to tell: if the DRM error goes away = SELinux denial; if unchanged = another cause.
-permissive hal_graphics_composer_default;
