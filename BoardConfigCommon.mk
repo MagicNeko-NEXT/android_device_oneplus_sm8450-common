@@ -81,6 +81,8 @@ BOARD_USES_GENERIC_KERNEL_IMAGE := true
 BOARD_USES_QCOM_MERGE_DTBS_SCRIPT := true
 TARGET_KERNEL_SOURCE := kernel/oneplus/sm8450
 TARGET_KERNEL_VERSION := 6.6
+# The stock adpl blob uses the older rmnet API from librmnetctl.
+$(call soong_config_set,rmnetctl,old_rmnet_data,true)
 TARGET_KERNEL_CONFIG := gki_defconfig vendor/waipio_perf.config
 
 # Kernel modules
