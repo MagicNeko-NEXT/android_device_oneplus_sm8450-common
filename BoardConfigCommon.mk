@@ -80,11 +80,8 @@ BOARD_RAMDISK_USE_LZ4 := true
 BOARD_USES_GENERIC_KERNEL_IMAGE := true
 BOARD_USES_QCOM_MERGE_DTBS_SCRIPT := true
 TARGET_KERNEL_SOURCE := kernel/oneplus/sm8450
-# 2026-10-11: KSM kernel support disabled per the owner's instruction: removed the vendor/oplus/ksm.config reference
-#            (the fragment stays in the tree, add the reference back to restore; patch in upstream-patches/0003);
-#            BBR congestion control also enabled: added vendor/oplus/lineage_net.config;
-#            KVM virtualization: added vendor/oplus/kvm.config (appended 2026-10-11).
-TARGET_KERNEL_CONFIG := gki_defconfig vendor/waipio_GKI.config vendor/oplus/waipio_GKI.config vendor/debugfs.config vendor/oplus/lineage_net.config vendor/oplus/kvm.config
+TARGET_KERNEL_VERSION := 6.6
+TARGET_KERNEL_CONFIG := gki_defconfig vendor/waipio_perf.config
 ifeq ($(TARGET_BUILD_VARIANT),userdebug)
 TARGET_KERNEL_CONFIG += vendor/oplus/bringup_debug.config
 endif
@@ -97,38 +94,28 @@ BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(COMMON_PATH)/m
 BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(COMMON_PATH)/modules.load.vendor_boot $(COMMON_PATH)/modules.load.recovery))
 BOOT_KERNEL_MODULES := $(strip $(shell cat $(COMMON_PATH)/modules.include.vendor_ramdisk $(COMMON_PATH)/modules.load.vendor_boot $(COMMON_PATH)/modules.load.recovery))
 TARGET_KERNEL_EXT_MODULE_ROOT := kernel/oneplus/sm8450-modules
+# Dependencies first: each module reads the Module.symvers of those it uses.
 TARGET_KERNEL_EXT_MODULES := \
     qcom/opensource/mmrm-driver \
-    qcom/opensource/audio-kernel \
-    qcom/opensource/camera-kernel \
-    qcom/opensource/dataipa/drivers/platform/msm \
-    qcom/opensource/datarmnet/core \
-    qcom/opensource/datarmnet-ext/aps \
-    qcom/opensource/datarmnet-ext/offload \
-    qcom/opensource/datarmnet-ext/shs \
-    qcom/opensource/datarmnet-ext/perf \
-    qcom/opensource/datarmnet-ext/perf_tether \
-    qcom/opensource/datarmnet-ext/sch \
-    qcom/opensource/datarmnet-ext/wlan \
-    qcom/opensource/display-drivers/msm \
-    qcom/opensource/eva-kernel \
-    qcom/opensource/video-driver \
-    qcom/opensource/wlan/qcacld-3.0/.qca6490
+    qcom/opensource/mm-drivers/msm_ext_display \
+    qcom/opensource/mm-drivers/hw_fence \
+    qcom/opensource/mm-drivers/sync_fence \
+    qcom/opensource/synx-kernel \
+    qcom/opensource/securemsm-kernel \
+    qcom/opensource/graphics-kernel \
+    qcom/opensource/display-drivers/msm
 
-
-# ===== Added 2026-10-05 when syncing the dev (lineage-ovaltine-dev) kernel: 10T's out-of-tree oplus modules =====
 TARGET_KERNEL_EXT_MODULES += \
+    oplus/kernel/boot/cmdline_parser:kbuild \
+    oplus/kernel/boot/oplus_projectinfo:kbuild \
+    oplus/kernel/boot/bootmode:kbuild \
+    oplus/kernel/boot/bootloader_log:kbuild \
     oplus/kernel/cpu/thermal:kbuild \
     oplus/kernel/device_info/cs_press:kbuild \
     oplus/kernel/dfr:kbuild \
     oplus/kernel/network/oplus_network_oem_qmi:kbuild \
     oplus/kernel/network/oplus_network_sim_detect:kbuild \
-    oplus/kernel/network/oplus_rf_cable_monitor:kbuild \
-    oplus/kernel/touchpanel/oplus_touchscreen_v2/touch_custom:kbuild \
-    oplus/kernel/touchpanel/oplus_touchscreen_v2:kbuild \
-    oplus/secure/biometrics/fingerprints/bsp/uff/driver:kbuild \
-    oplus/secure/common/bsp/drivers/oplus_secure_common \
-    oplus/sensor/kernel/qcom/sensor:kbuild
+    oplus/kernel/network/oplus_rf_cable_monitor:kbuild
 
 # Platform
 BOARD_USES_QCOM_HARDWARE := true
