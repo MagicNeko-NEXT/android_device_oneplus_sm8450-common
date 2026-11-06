@@ -36,12 +36,10 @@ PRODUCT_PACKAGES += \
     android.hardware.audio@7.0-impl \
     android.hardware.audio.effect@7.0-impl \
     android.hardware.audio.service \
-    vendor.qti.hardware.AGMIPC@1.0-service \
     android.hardware.bluetooth.audio-impl \
     android.hardware.soundtrigger@2.3-impl \
     audioadsprpcd \
     audio.bluetooth.default \
-    audio.primary.taro \
     audio.r_submix.default \
     audio.usb.default \
     lib_bt_aptx \
@@ -62,7 +60,6 @@ PRODUCT_PACKAGES += \
     libreverbwrapper \
     libvisualizer \
     libvolumelistener \
-    sound_trigger.primary.taro \
 
 AUDIO_HAL_DIR := hardware/qcom-caf/sm8450/audio/primary-hal
 QCV_FAMILY_SKUS := cape taro
