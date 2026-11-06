@@ -40,7 +40,9 @@ system_ext                                              /system_ext            e
 product                                                 /product               ext4    ro,barrier=1,discard                                 wait,slotselect,avb=vbmeta_system,logical,first_stage_mount
 vendor                                                  /vendor                erofs   ro                                                   wait,slotselect,avb=vbmeta_vendor,logical,first_stage_mount
 vendor_dlkm                                             /vendor_dlkm           erofs   ro                                                   wait,slotselect,avb=vbmeta_vendor,logical,first_stage_mount
-system_dlkm                                             /system_dlkm           erofs   ro                                                   wait,slotselect,avb=vbmeta_system,logical,first_stage_mount
+# [xi-a17] 10T(ovaltine) 的 super 没有 system_dlkm_a/b 逻辑分区，
+#         保留此行会让 first-stage init 无限等待。
+#system_dlkm                                             /system_dlkm           erofs   ro                                                   wait,slotselect,avb=vbmeta_system,logical,first_stage_mount
 odm                                                     /odm                   erofs   ro                                                   wait,slotselect,avb=vbmeta_vendor,logical,first_stage_mount
 /dev/block/by-name/boot                                 /boot                  emmc    defaults                                             slotselect,avb=vbmeta,first_stage_mount
 /dev/block/by-name/vendor_boot                          /vendor_boot           emmc    defaults                                             slotselect,avb=vbmeta,first_stage_mount

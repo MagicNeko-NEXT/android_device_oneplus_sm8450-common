@@ -71,12 +71,17 @@ BOARD_BOOTCONFIG := \
     androidboot.serialconsole=0 \
     androidboot.usbcontroller=a600000.dwc3
 
+# [xi-a17] PJG 默认是 console=ttynull + qcom_geni_serial.con_enabled=0，
+# 内核完全静音、串口也关，崩了连 ramoops 都拿不到东西。改成可观测配置。
 BOARD_KERNEL_CMDLINE := \
-    console=ttynull \
-    log_buf_len=2M \
+    console=tty0 \
+    earlycon \
+    keep_bootcon \
+    log_buf_len=8M \
+    ignore_loglevel \
+    panic=0 \
     nohugevmalloc \
     nosoftlockup \
-    qcom_geni_serial.con_enabled=0 \
     scsi_mod.scan=sync \
     sysctl.kernel.firmware_config.force_sysfs_fallback=1
 
@@ -86,6 +91,9 @@ BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_IMAGE_NAME := Image
 
 TARGET_KERNEL_SOURCE := kernel/oneplus/sm8450
+
+# [xi-a17] PJG picks 分支没写这行；不设会让 QCOM 硬件路径退回 5.10 目录树。
+TARGET_KERNEL_VERSION := 6.6
 
 TARGET_KERNEL_ADDITIONAL_FLAGS := \
     CONFIG_EXCLUDE_ICNSS=y \
