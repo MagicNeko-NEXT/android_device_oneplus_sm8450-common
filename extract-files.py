@@ -48,6 +48,28 @@ lib_fixups: lib_fixups_user_type = {
 }
 
 blob_fixups: blob_fixups_user_type = {
+    'odm/lib64/liboemcrypto.so': blob_fixup()
+        .replace_needed('libdisplayconfig.qti.so', 'libdisplayconfig.stock.so'),
+    'vendor/bin/trusteduilistener': blob_fixup()
+        .replace_needed('libdisplayconfig.qti.so', 'libdisplayconfig.stock.so'),
+    'vendor/lib64/libTrustedUITZ.so': blob_fixup()
+        .replace_needed('libdisplayconfig.qti.so', 'libdisplayconfig.stock.so'),
+    'vendor/lib64/libTrustedUIVM.so': blob_fixup()
+        .replace_needed('libdisplayconfig.qti.so', 'libdisplayconfig.stock.so'),
+    'vendor/lib64/libops.so': blob_fixup()
+        .replace_needed('libdisplayconfig.qti.so', 'libdisplayconfig.stock.so'),
+    'vendor/lib64/libpsmoptfeature.so': blob_fixup()
+        .replace_needed('libdisplayconfig.qti.so', 'libdisplayconfig.stock.so'),
+    'vendor/lib64/libqcodec2_utils.so': blob_fixup()
+        .replace_needed('libdisplayconfig.qti.so', 'libdisplayconfig.stock.so'),
+    'vendor/lib64/libqti-perfd.so': blob_fixup()
+        .replace_needed('libdisplayconfig.qti.so', 'libdisplayconfig.stock.so'),
+    'vendor/lib64/libvendorscenariopoweroptfeature.so': blob_fixup()
+        .replace_needed('libdisplayconfig.qti.so', 'libdisplayconfig.stock.so'),
+    'vendor/lib64/libvideooptfeature.so': blob_fixup()
+        .replace_needed('libdisplayconfig.qti.so', 'libdisplayconfig.stock.so'),
+    'vendor/lib64/libwfddisplayconfig_vendor.so': blob_fixup()
+        .replace_needed('libdisplayconfig.qti.so', 'libdisplayconfig.stock.so'),
     'system_ext/bin/horae': blob_fixup()
         .replace_needed('libprotobuf-cpp-lite.so', 'libprotobuf-cpp-lite-21.12.so'),
     'system_ext/etc/seccomp_policy/tcmd.policy': blob_fixup()
