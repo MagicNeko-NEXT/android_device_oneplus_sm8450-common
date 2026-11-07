@@ -83,7 +83,7 @@ TARGET_KERNEL_SOURCE := kernel/oneplus/sm8450
 TARGET_KERNEL_VERSION := 6.6
 # The stock adpl blob uses the older rmnet API from librmnetctl.
 $(call soong_config_set,rmnetctl,old_rmnet_data,true)
-TARGET_KERNEL_CONFIG := gki_defconfig vendor/waipio_perf.config
+TARGET_KERNEL_CONFIG := gki_defconfig vendor/waipio_perf.config vendor/oplus/waipio_GKI.config
 
 # Kernel modules
 BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE := $(TARGET_KERNEL_SOURCE)/modules.vendor_blocklist.msm.waipio
@@ -105,16 +105,14 @@ TARGET_KERNEL_EXT_MODULES := \
     qcom/opensource/display-drivers/msm
 
 TARGET_KERNEL_EXT_MODULES += \
-    oplus/kernel/boot/cmdline_parser:kbuild \
-    oplus/kernel/boot/oplus_projectinfo:kbuild \
-    oplus/kernel/boot/bootmode:kbuild \
-    oplus/kernel/boot/bootloader_log:kbuild \
     oplus/kernel/cpu/thermal:kbuild \
     oplus/kernel/device_info/cs_press:kbuild \
     oplus/kernel/dfr:kbuild \
     oplus/kernel/network/oplus_network_oem_qmi:kbuild \
     oplus/kernel/network/oplus_network_sim_detect:kbuild \
-    oplus/kernel/network/oplus_rf_cable_monitor:kbuild
+    oplus/kernel/network/oplus_rf_cable_monitor:kbuild \
+    oplus/kernel/touchpanel/oplus_touchscreen_v2/touch_custom:kbuild \
+    oplus/kernel/touchpanel/oplus_touchscreen_v2:kbuild
 
 # Platform
 BOARD_USES_QCOM_HARDWARE := true
