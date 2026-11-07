@@ -86,6 +86,7 @@ $(call soong_config_set,rmnetctl,old_rmnet_data,true)
 TARGET_KERNEL_CONFIG := gki_defconfig vendor/waipio_perf.config vendor/oplus/waipio_GKI.config
 ifeq ($(TARGET_BUILD_VARIANT),userdebug)
 TARGET_KERNEL_CONFIG += vendor/oplus/bringup_debug.config
+BOARD_KERNEL_CMDLINE += console=tty0 ignore_loglevel printk.devkmsg=on
 endif
 
 # Kernel modules
