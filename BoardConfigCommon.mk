@@ -86,7 +86,8 @@ $(call soong_config_set,rmnetctl,old_rmnet_data,true)
 TARGET_KERNEL_CONFIG := gki_defconfig vendor/waipio_perf.config vendor/oplus/waipio_GKI.config
 ifeq ($(TARGET_BUILD_VARIANT),userdebug)
 TARGET_KERNEL_CONFIG += vendor/oplus/bringup_debug.config
-BOARD_KERNEL_CMDLINE += console=tty0 ignore_loglevel printk.devkmsg=on
+# Keep bootloader display clocks and power domains on so splash and fbcon stay lit before msm_drm takes over.
+BOARD_KERNEL_CMDLINE += console=tty0 ignore_loglevel printk.devkmsg=on clk_ignore_unused pd_ignore_unused
 endif
 
 # Kernel modules
