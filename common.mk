@@ -112,6 +112,7 @@ PRODUCT_SET_DEBUGFS_RESTRICTIONS := true
 # Display
 PRODUCT_PACKAGES += \
     android.hardware.graphics.mapper@4.0-impl-qti-display \
+    mapper.qti \
     init.qti.display_boot.rc \
     init.qti.display_boot.sh \
     vendor.qti.hardware.display.allocator-service \
