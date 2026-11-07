@@ -11,9 +11,6 @@ msm_sysstats.ko
 msm_show_resume_irq.ko
 smem.ko
 qcom_smd.ko
-debug_symbol.ko
-minidump.ko
-qcom_ipc_logging.ko
 qcom_glink.ko
 qcom_glink_smem.ko
 rproc_qcom_common.ko
@@ -86,6 +83,7 @@ qcom_rpmh.ko
 dcvs_fp.ko
 qcom-dcvs.ko
 memlat.ko
+debug_symbol.ko
 qcom_logbuf_vendor_hooks.ko
 panel_event_notifier.ko
 sync_fence.ko
@@ -104,7 +102,9 @@ lontium-lt9611uxc.ko
 llcc-qcom.ko
 qcom_iommu_util.ko
 msm_kgsl.ko
+oplus_bsp_fw_update.ko
 hdcp_qseecom_dlkm.ko
+kernel_fb.ko
 oplus_bsp_cs_press_f71.ko
 qcom-i2c-pmic.ko
 sg.ko
@@ -127,8 +127,16 @@ usb_f_ccid.ko
 usb_f_cdev.ko
 usb_f_gsi.ko
 repeater-i2c-eusb2.ko
+buildvariant.ko
+oplus_bsp_boot_projectinfo.ko
+oplus_bsp_tp_custom.ko
+device_info.ko
+oplus_bsp_tp_notify.ko
+olc.ko
+oplus_bsp_tp_common.ko
+oplus_bsp_tp_syna_common.ko
+oplus_bsp_tp_tcm_S3910.ko
 pm8941-pwrkey.ko
-qti_battery_charger.ko
 qcom-hv-haptics.ko
 i2c-msm-geni.ko
 pinctrl-msm.ko
@@ -137,6 +145,9 @@ ipclite.ko
 synx-driver.ko
 reboot-mode.ko
 qcom-pon.ko
+oplus_chg.ko
+oplus_chg_v2.ko
+oplus_chg_symbol.ko
 qcom-spmi-temp-alarm.ko
 qti_qmi_sensor_v2.ko
 qti_qmi_cdev.ko
