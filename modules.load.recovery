@@ -142,7 +142,6 @@ sys_pm_vx.ko
 msm_ext_display.ko
 memlat.ko
 debug_symbol.ko
-qcom_logbuf_vendor_hooks.ko
 panel_event_notifier.ko
 sync_fence.ko
 oplus_charger_present.ko
