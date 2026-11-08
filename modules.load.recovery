@@ -186,7 +186,6 @@ pm8941-pwrkey.ko
 i2c-msm-geni.ko
 i3c-master-msm-geni.ko
 ipclite.ko
-synx-driver.ko
 qcom-pon.ko
 oplus_chg.ko
 oplus_chg_v2.ko
