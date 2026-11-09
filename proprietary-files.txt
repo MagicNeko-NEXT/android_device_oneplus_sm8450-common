@@ -353,7 +353,8 @@ odm/lib64/libsnapdragoncolor-pxlw.so|34d722bf0d1feea5960413add73a85dcea5df905
 
 # Display (SDM) - from ingot
 vendor/lib64/libdisplayskuutils.so|405e2456d79c8e0118efb9ade2d8a8d82565af5c
-vendor/lib64/libsdmextension.so|08d321d3e0da2231a29e3ec92604dca48c8895e3
+# 6.6: not ABI compatible with the sm8450-6.6 display HAL (HWPipeCaps grew), libsdmcore falls back to ResourceDefault
+#vendor/lib64/libsdmextension.so|08d321d3e0da2231a29e3ec92604dca48c8895e3
 
 # Display (SDM)
 vendor/etc/display/DPU660.xml|b26dd73e361546d89bf3d7082a471703dc6ac2cb
