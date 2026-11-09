@@ -84,6 +84,9 @@ TARGET_KERNEL_VERSION := 6.6
 # The stock adpl blob uses the older rmnet API from librmnetctl.
 $(call soong_config_set,rmnetctl,old_rmnet_data,true)
 TARGET_KERNEL_CONFIG := gki_defconfig vendor/waipio_perf.config vendor/oplus/waipio_GKI.config
+# UFS sometimes stays deferred until the deferred probe timeout fires, and the
+# default 10s ends after first stage init has already given up on the partitions.
+BOARD_KERNEL_CMDLINE += deferred_probe_timeout=2
 ifeq ($(TARGET_BUILD_VARIANT),userdebug)
 TARGET_KERNEL_CONFIG += vendor/oplus/bringup_debug.config
 # Keep bootloader display clocks and power domains on so splash and fbcon stay lit before msm_drm takes over.
