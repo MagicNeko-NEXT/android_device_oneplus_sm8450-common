@@ -307,22 +307,22 @@ vendor/etc/Oplus_QC_LTM_SM8475_2022_07_05.pfm|accc22ce7e4e6b0bcde31fa1f959622198
 vendor/lib64/libPanelChaplin.so|6aa28d5362f7db64b27852151d7cdcd849ba8ece
 
 # Display (HDR)
-vendor/lib64/libhdr_tm.so|b5bc48b34450b9031e7b667b9b97991b3aafa5fd
-vendor/lib64/libhdrdynamic.so|b058fe4d86031f3125368b88b62e753d63b0f4cd
-vendor/lib64/libhdrdynamicootf.so|6d1c35c9e1948e80d5ffb6a5c79b4b9889d1db58
+#vendor/lib64/libhdr_tm.so|b5bc48b34450b9031e7b667b9b97991b3aafa5fd
+#vendor/lib64/libhdrdynamic.so|b058fe4d86031f3125368b88b62e753d63b0f4cd
+#vendor/lib64/libhdrdynamicootf.so|6d1c35c9e1948e80d5ffb6a5c79b4b9889d1db58
 
 # Display (HWC)
 vendor/bin/qdcmss|801d4429210c1a4f8c01f6d91f172ff063c5c307
 vendor/etc/init/qdcmss.rc|53d78d686678c4f923a9ec4ace7d4d3575b13788
 vendor/etc/snapdragon_color_libs_config.xml|5584fe92d3292093452324e8a6977a6969b777a2
 vendor/lib64/libdpps.so|ee21d11f4f693f84d2879fb81bdb1f60048e154c
-vendor/lib64/libgame_enhance.so|4432e47d990e98edb141becc345a92d03df26bf4
+#vendor/lib64/libgame_enhance.so|4432e47d990e98edb141becc345a92d03df26bf4
 vendor/lib64/libmemutils.so|8102e47e3d1c521bfcb1201477006cd5bc339379
-vendor/lib64/libqdcm-algo.so|4ab77288626ca1978ed2a7c15b945af6c223db9b
-vendor/lib64/libqdcm-json-mode-parser.so|decc0d77e1aec8bafc8c0e43f54dd6a14c018466
-vendor/lib64/libqdcm-mode-parser.so|e63dc113ab3728d8b2d3034c7a2027c4c4117ec2
-vendor/lib64/libsnapdragoncolor-manager.so|ca5ad5c09eadf4bb12a1ba0b2a0450d35c8fb708
-vendor/lib64/libsnapdragoncolor-qdcm.so|79dfb4f2307585bd331dea882ed88c8f131e5838
+#vendor/lib64/libqdcm-algo.so|4ab77288626ca1978ed2a7c15b945af6c223db9b
+#vendor/lib64/libqdcm-json-mode-parser.so|decc0d77e1aec8bafc8c0e43f54dd6a14c018466
+#vendor/lib64/libqdcm-mode-parser.so|e63dc113ab3728d8b2d3034c7a2027c4c4117ec2
+#vendor/lib64/libsnapdragoncolor-manager.so|ca5ad5c09eadf4bb12a1ba0b2a0450d35c8fb708
+#vendor/lib64/libsnapdragoncolor-qdcm.so|79dfb4f2307585bd331dea882ed88c8f131e5838
 
 # Display (Pixelworks)
 # [t12 2026-10-05] 10T(ovaltine) + CPH2415_15.0.0.700 dump: file doesn't exist in 700 -> disabled
@@ -373,7 +373,9 @@ vendor/lib64/libhdr_backlight_adapter.so|57036c19938fe40e73e9b9e3d4c6a6073d7aa85
 vendor/lib64/libqrtrclient.so|251146748531781010bcc33110f6afaa340f6a33
 vendor/lib64/libqseed3.so|6fcc4cb419053b57fc14d7cb2e3fdb18901cc87e
 vendor/lib64/librcmask.so|36919cfe71e1e6ab4e507f98dab320b7046d24c4
-vendor/lib64/libsdm-color.so|3ffdac82ec83cfcf0cfab32718a08500ec73e36d
+# 6.6: the stock color manager stack (libsdm-color and the libraries only it loads) is built for the 5.10
+# display HAL and aborts the sm8450-6.6 composer in ColorManager::RegisterDisplay; left out until a matching set exists.
+#vendor/lib64/libsdm-color.so|3ffdac82ec83cfcf0cfab32718a08500ec73e36d
 vendor/lib64/libsdm-colormgr-algo.so|0c922b88dc8f11a9c8dbe78daec337d4d5333087
 vendor/lib64/libsdm-disp-vndapis.so|169adaa522f75d622e76a1597c486eff4551c5a3
 vendor/lib64/libtestutils.so|61b98f252afde4eb7c674de870e7afb590c9bb2a
