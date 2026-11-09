@@ -10,10 +10,10 @@ vendor/etc/acdbdata/nn_ns_models/fai__2.7.2_0.0__3.0.0_0.0__eai_1.36_enpu2.pmd|1
 vendor/etc/acdbdata/nn_vad_models/fai__3.0.0_0.0__eai_1.36_enpu2.pmd|997e9e31b6bc7e9abc3f060f824ac3dd14c3d662
 
 # ADSP
-vendor/bin/adsprpcd|4821003d01528b1fb5b7b409cd80e4307129ec9d
-vendor/etc/init/vendor.qti.adsprpc-guestos-service.rc|8f0eb84d3eb5fc0f683ef7b975b75044d56f513e
-vendor/lib64/libadsp_default_listener.so|45f836a63fa31f73032e53df5053a14f5b0c84fb
-vendor/lib64/libadsprpc.so|4e5ac3ebf008633fe11a3f937805a2aef419d7aa
+vendor/bin/adsprpcd|1d209eb778ea00b5224bece714bcb6ee1070fd7c
+vendor/etc/init/vendor.qti.adsprpc-guestos-service.rc|3a330390ac3602715081328839b8c7081d50fc71
+vendor/lib64/libadsp_default_listener.so|514c1b0b9d7db944427d4a3e9845d62dfbcb477c
+vendor/lib64/libadsprpc.so|b0ad6492fc650d793b90c3ee505f8678c1b6bab2
 vendor/lib64/libloadalgo_stub.so|a75e4b1788a87894609c096dc8e466b2c86ae2e9
 
 # ADSP modules
@@ -147,12 +147,12 @@ vendor/lib64/vendor.qti.hardware.bluetooth_sar@1.0.so|6c7442150cb15f5ef773161556
 vendor/lib64/vendor.qti.hardware.bluetooth_sar@1.1.so|961ac00d1f53eb643c234d7c73871eb0b3bc00d4
 
 # CDSP
-vendor/bin/cdsprpcd|8c50020fda4d4217fd85ea0df98c55237c275ff2
-vendor/etc/init/vendor.qti.cdsprpc-service.rc|36772b70216796e8ef19376d9c6a81ee9ffff549
-vendor/lib64/libcdsp_default_listener.so|b6a4f036f9f9d7a60216211225b15fe5ab9add46
-vendor/lib64/libcdsprpc.so|019150011049a7c5418a0f480bc3cbc7fedf8499
-vendor/lib64/libmdsprpc.so|54b7f8b668538aafbc8c8bceb65d89efb0f20867
-vendor/lib64/libsdsprpc.so|4063928852c1496512be5276341c6010a2532e2e
+vendor/bin/cdsprpcd|d4a649fdee9a2384da1599fc1eb33708aa174f59
+vendor/etc/init/vendor.qti.cdsprpc-service.rc|842f4411746605c370f6bae57df6f9c1a276d51a
+vendor/lib64/libcdsp_default_listener.so|ca7b1060c0bdfd05c20de81495074dc6e89ca270
+vendor/lib64/libcdsprpc.so|d5ae903f995aed8b87ba1f0e66ed823f81557f29
+vendor/lib64/libmdsprpc.so|5e6ba6ba1990147dcf555c0c9830d245b697aeb7
+vendor/lib64/libsdsprpc.so|f7b35ea78045cc2b864a60fdd0c368b41faec930
 
 # Camera
 system/lib64/libziparchive.so:odm/lib64/libziparchive_odm.so;FIX_SONAME|d35e1e6b34a9713266f97d3df0ebdd28101feb4a|c1c08c4e6a4acd0bb90c1fb5e303c26bdf5cfa50
@@ -436,11 +436,12 @@ vendor/lib64/vendor.libdpmtcm.so|f298dd6c2fc4250d2de054672b8c56a631e4ea01
 vendor/lib64/vendor.qti.hardware.dpmservice@1.0.so;MODULE_SUFFIX=_vendor|1d690710fc30aef32e343734f7f72b6a16913389
 vendor/lib64/vendor.qti.hardware.dpmservice@1.1.so;MODULE_SUFFIX=_vendor|6fea2e5f9144a841e5dbac473a2441be979ec73c
 
-# DSP
-vendor/bin/dspservice|a054e25f1e5b52db6b031ba59117a0ad65252e35
-vendor/etc/init/vendor.qti.hardware.dsp@1.0-service.rc|fbf2bb38ca6bdddf98c7123da9e1f263a4eec55f
-vendor/etc/seccomp_policy/vendor.qti.hardware.dsp.policy|f060101b26d3674bb173e5fc95e118f56a8ac15d
-vendor/lib64/vendor.qti.hardware.dsp@1.0.so|ae6cc187f2567cf11447966ae9491985a27cea52
+# DSP - from PDX257 ELBE-1.1.0-REL-260522-1202 (6.6 fastrpc ABI)
+vendor/bin/dspservice|400c1e82a56552d60ec5cbc2f5f0950fcee516cf
+vendor/etc/init/vendor.qti.hardware.dsp-service.rc|8cf97beaec8309796cf3003aed6e52baa42cc8ba
+vendor/etc/seccomp_policy/vendor.qti.hardware.dsp.policy|cacb134fab84cb55f607fcff11b80481e2a8114d
+vendor/etc/vintf/manifest/vendor.qti.hardware.dsp-service.xml|c02c767856a1e8ef25441f3e0243487ac3829367
+vendor/lib64/vendor.qti.hardware.dsp-V1-ndk.so|cdf78fd543aa541925a3a4232221bbe1ae0bcb74
 
 # EMBMS
 vendor/bin/embmsslServer|36e628abd44f0a48017fb4941b3206631615c00b
@@ -1098,7 +1099,7 @@ odm/lib64/liboplus_service.so|ea6d5849d3ea1e7bf066aadc0b3478179f050560
 vendor/bin/hw/vendor.qti.hardware.sensorscalibrate@1.0-service|60c4b17dd002450b0a8e4bacf974283e45f20f8f
 vendor/bin/init.qcom.sensors.sh|454c6de8c65b9ad1c41f063544871a4ba0665689
 vendor/bin/sensors.qti|6b182b52640cc50bc74f3b6e7ff52f3e54fe3fc4
-vendor/bin/sscrpcd|6ff3be775fd314a077dfd7ee98a105029f792e64
+vendor/bin/sscrpcd|b11e792503ec30b0cc64cd752b78ce211d1f323d
 vendor/etc/init/init.vendor.sensors.rc|e24e8e2236b2114e23e4ecacffbd9db0d2824410
 vendor/etc/init/vendor.qti.hardware.sensorscalibrate@1.0-service.rc|449c88778d880c0d47cc4d651fc60c4c424c1a3f
 vendor/etc/init/vendor.sensors.qti.rc|f34fc966af816b50f10ae7520b33863961a14478
@@ -1171,7 +1172,7 @@ vendor/lib64/libsns_registry_skel.so|2199688f248b27891d6516dccd9838c7a74ee763
 vendor/lib64/libsnsapi.so|2cf46d36a7822d7ec35d630e98d9e8a819b8b887
 vendor/lib64/libsnsdiaglog.so|f9a9d63c85bb55555bc2e91762033499bd0f14cd
 vendor/lib64/libssc.so|1dce57e7893bb2d321460085d0e08523f3348080
-vendor/lib64/libssc_default_listener.so|313d279457f7c6357b6883d6ca450cb4df064357
+vendor/lib64/libssc_default_listener.so|7f6e23e755e34441606172c9cac1358996fecdea
 # vendor/lib64/sensors.ssc.so|0c66524c9e6a21d25ce1586a5fef55fcce882ef6
 vendor/lib64/vendor.oplus.hardware.cwb@1.0.so|8e4f5adf7b9f6ebfd323f169d8606485807e51be
 vendor/lib64/vendor.qti.hardware.sensorscalibrate@1.0.so|46806c75b15d9d9fea87de744d135f30d6484abc
@@ -1189,8 +1190,8 @@ vendor/lib64/libeva.so|fb1891512f106d6a8951a01b91d11d6a8816b1c1
 vendor/lib64/libeva_util.so|1ba60c3c176173ed2697a31dfcb07c8f0d3b1fb8
 vendor/lib64/libface3d_dev.so|960a304b53c97e072a344a7fafe142aa22c7b03c
 vendor/lib64/libfastcrc.so|ab0a2648d275d1768c5dc18d170f5ff75a9aad4b
-vendor/lib64/libfastcvdsp_stub.so|b71d08a7a32d795e90b9b20b5b651ef2f7479a8c
-vendor/lib64/libfastcvopt.so|47a4a9d760907e31352c9c0d4a29bb206fb1e20c
+vendor/lib64/libfastcvdsp_stub.so|18d5afc0b2b3f69ba122221b4a64b10b5f06fb0f
+vendor/lib64/libfastcvopt.so|6dee3ab1ed787a83200983354b860b512c799a88
 vendor/lib64/libscveCommon.so|64df2008cffc3ca18629e831e6c95cc8e798b199
 vendor/lib64/libscveCommon_stub.so|f4ca6b46eb6c7d87f9e1aff84bfe9feccac13f45
 vendor/lib64/libscveObjectSegmentation.so|6aa6e8f3d54aabdcf43d4333f5a37e1da4ef1c97
