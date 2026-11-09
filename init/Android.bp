@@ -101,3 +101,17 @@ sh_binary {
     src: "init.qcom.sh",
     vendor: true,
 }
+
+// Bring-up only: on-screen boot report, installed on userdebug builds.
+prebuilt_etc {
+    name: "init.ovaltine.bringup.rc",
+    src: "bringup/init.ovaltine.bringup.rc",
+    sub_dir: "init",
+    vendor: true,
+}
+
+sh_binary {
+    name: "bringup-report.sh",
+    src: "bringup/bringup-report.sh",
+    vendor: true,
+}

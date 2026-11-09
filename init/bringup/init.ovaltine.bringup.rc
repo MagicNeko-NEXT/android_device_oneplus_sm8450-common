@@ -1,0 +1,10 @@
+# Bring-up only, installed on userdebug builds: on-screen boot report.
+service vendor.bringup_report /vendor/bin/bringup-report.sh
+    user root
+    group root log
+    seclabel u:r:su:s0
+    oneshot
+    disabled
+
+on boot
+    start vendor.bringup_report
