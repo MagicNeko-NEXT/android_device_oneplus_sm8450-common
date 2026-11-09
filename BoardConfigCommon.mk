@@ -120,6 +120,9 @@ TARGET_KERNEL_EXT_MODULES := \
     qcom/opensource/datarmnet-ext/perf_tether \
     qcom/opensource/datarmnet-ext/sch \
     qcom/opensource/datarmnet-ext/wlan \
+    qcom/opensource/wlan/platform \
+    qcom/opensource/wlan/qcacld-3.0/.qca6490 \
+    qcom/opensource/bt-kernel \
     qcom/opensource/graphics-kernel \
     qcom/opensource/display-drivers/msm
 
