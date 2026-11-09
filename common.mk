@@ -27,6 +27,13 @@ PRODUCT_PACKAGES += \
     checkpoint_gc \
     otapreopt_script
 
+# Bring-up: on-screen boot report (userdebug only)
+ifeq ($(TARGET_BUILD_VARIANT),userdebug)
+PRODUCT_PACKAGES += \
+    bringup-report.sh \
+    init.ovaltine.bringup.rc
+endif
+
 # IFAA
 PRODUCT_PACKAGES += \
     IFAAService
