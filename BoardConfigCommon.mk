@@ -84,6 +84,13 @@ TARGET_KERNEL_VERSION := 6.6
 # The stock adpl blob uses the older rmnet API from librmnetctl.
 $(call soong_config_set,rmnetctl,old_rmnet_data,true)
 TARGET_KERNEL_CONFIG := gki_defconfig vendor/waipio_perf.config vendor/oplus/waipio_GKI.config
+# UFS sometimes stays deferred until the deferred probe timeout fires, and the
+# default 10s ends after first stage init has already given up on the partitions.
+BOARD_KERNEL_CMDLINE += deferred_probe_timeout=2
+ifeq ($(TARGET_BUILD_VARIANT),userdebug)
+# Bring-up: run SELinux permissive so denials are logged but don't hide failures.
+BOARD_BOOTCONFIG += androidboot.selinux=permissive
+endif
 
 # Kernel modules
 BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE := $(TARGET_KERNEL_SOURCE)/modules.vendor_blocklist.msm.waipio
