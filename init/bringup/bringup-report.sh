@@ -24,15 +24,19 @@ while [ $n -lt 90 ]; do
     TS=$(ls -t /data/tombstones/tombstone_* 2>/dev/null | grep -v '\.pb$' | head -1)
     if [ -n "$TS" ]; then
       grep -m1 '^Cmdline:' "$TS" | cut -c1-134
-      grep -m1 -E '^signal|^Abort message' "$TS" | cut -c1-134
-      grep -m1 '^Abort message' "$TS" | cut -c1-268 | fold -w 134
-      grep -E '^ +#[0-9]{2} pc' "$TS" | head -8 | cut -c1-134
+      grep -m1 '^signal' "$TS" | cut -c1-134
+      AB=$(grep -m1 '^Abort message' "$TS")
+      if [ -n "$AB" ]; then
+        echo "$AB" | cut -c1-134
+        [ ${#AB} -gt 134 ] && echo "$AB" | cut -c135-268
+      fi
+      grep -E '^ +#[0-9]{2} pc' "$TS" | head -16 | cut -c1-134
     else
       echo "(none)"
     fi
-    echo "--- logcat composer/sf errors ---"
-    logcat -d -b main,system,crash '*:E' 2>/dev/null \
-      | grep -iE 'composer|hwc|sdm|SurfaceFlinger|gralloc|allocator|drm|FATAL|DEBUG' \
+    echo "--- logcat composer ---"
+    logcat -d -b main,system,crash 2>/dev/null \
+      | grep -iE 'composer|sdm|sde|hwc' \
       | tail -14 | cut -c1-134
     echo "--- dmesg usb ---"
     dmesg | grep -iE 'dwc3|a600000|eusb|repeater|hsphy|UDC' | grep -v sync_state | tail -4 | cut -c1-134
