@@ -220,8 +220,6 @@ qrtr.ko
 qrtr-smd.ko
 qrtr-mhi.ko
 qrtr-gunyah.ko
-zsmalloc.ko
-zram.ko
 rmnet_mem.ko
 gsim.ko
 ipam.ko
