@@ -110,6 +110,16 @@ TARGET_KERNEL_EXT_MODULES := \
     qcom/opensource/securemsm-kernel \
     qcom/opensource/dsp-kernel \
     qcom/opensource/audio-kernel \
+    qcom/opensource/datarmnet-ext/mem \
+    qcom/opensource/dataipa/drivers/platform/msm \
+    qcom/opensource/datarmnet/core \
+    qcom/opensource/datarmnet-ext/aps \
+    qcom/opensource/datarmnet-ext/offload \
+    qcom/opensource/datarmnet-ext/shs \
+    qcom/opensource/datarmnet-ext/perf \
+    qcom/opensource/datarmnet-ext/perf_tether \
+    qcom/opensource/datarmnet-ext/sch \
+    qcom/opensource/datarmnet-ext/wlan \
     qcom/opensource/graphics-kernel \
     qcom/opensource/display-drivers/msm
 
