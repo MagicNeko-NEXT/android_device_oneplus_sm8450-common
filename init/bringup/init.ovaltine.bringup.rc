@@ -18,3 +18,7 @@ on boot
     wait /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode 2
     write /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode peripheral
 
+# Allow "adb root" by default (LineageOS keeps this switch in /data/adbroot/enabled).
+on post-fs-data
+    mkdir /data/adbroot 0700 root root
+    write /data/adbroot/enabled 1
