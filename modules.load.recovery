@@ -217,6 +217,7 @@ gh_mem_notifier.ko
 gunyah_loader.ko
 gh_irq_lend.ko
 drm_display_helper.ko
+msm_drm.ko
 nvmem_qfprom.ko
 slimbus.ko
 slim-qcom-ngd-ctrl.ko
