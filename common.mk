@@ -31,6 +31,7 @@ PRODUCT_PACKAGES += \
 ifeq ($(TARGET_BUILD_VARIANT),userdebug)
 PRODUCT_PACKAGES += \
     bringup-report.sh \
+    su \
     init.ovaltine.bringup.rc
 endif
 
