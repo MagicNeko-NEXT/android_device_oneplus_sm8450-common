@@ -111,6 +111,8 @@ TARGET_KERNEL_EXT_MODULES := \
     qcom/opensource/mm-drivers/sync_fence \
     qcom/opensource/synx-kernel \
     qcom/opensource/securemsm-kernel \
+    qcom/opensource/dsp-kernel \
+    qcom/opensource/audio-kernel \
     qcom/opensource/graphics-kernel \
     qcom/opensource/display-drivers/msm
 
