@@ -142,7 +142,6 @@ i2c-msm-geni.ko
 pinctrl-msm.ko
 i3c-master-msm-geni.ko
 ipclite.ko
-synx-driver.ko
 reboot-mode.ko
 qcom-pon.ko
 oplus_chg.ko
