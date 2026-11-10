@@ -620,3 +620,6 @@ subsystem mem_buf_vm
 
 # IPA Events
 /dev/ipa_events         0660   radio      radio
+
+# Audio sysfs
+/sys/kernel/snd_card/card_state     0664   media      audio

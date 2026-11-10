@@ -33,6 +33,27 @@ PRODUCT_PACKAGES += \
     bringup-report.sh \
     su \
     init.ovaltine.bringup.rc
+
+# Bring-up: ADB force-authorization and root access
+PRODUCT_ADB_KEYS ?= $(LOCAL_PATH)/init/adb_keys
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.adb.secure=0 \
+    ro.secure=0 \
+    persist.sys.debug_enabled=1 \
+    service.adb.root=1
+
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    ro.adb.secure=0 \
+    ro.secure=0 \
+    persist.sys.debug_enabled=1 \
+    service.adb.root=1
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/init/adb_keys:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/adb_keys \
+    $(LOCAL_PATH)/init/adb_keys:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/adb_keys \
+    $(LOCAL_PATH)/init/adb_keys:$(TARGET_COPY_OUT_PRODUCT)/etc/security/adb_keys \
+    $(LOCAL_PATH)/init/adb_keys:$(TARGET_COPY_OUT_VENDOR)/etc/security/adb_keys
 endif
 
 # IFAA
