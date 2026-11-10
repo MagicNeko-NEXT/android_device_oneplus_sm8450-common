@@ -30,6 +30,17 @@ on init
     mkdir /dev/usb-ffs/adb 0770 shell system
     mount functionfs adb /dev/usb-ffs/adb uid=2000,gid=1000,rmode=0770,fmode=0660
 
+on property:vendor.all.modules.ready=1
+    wait /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode 2
+    write /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode peripheral
+    wait /sys/class/udc/a600000.dwc3 2
+    setprop sys.usb.controller a600000.dwc3
+    setprop vendor.usb.controller a600000.dwc3
+    setprop sys.usb.configfs 1
+    setprop sys.usb.config adb
+    start adbd
+    setprop service.adb.root 1
+
 on early-boot
     write /sys/kernel/boot_adsp/boot 1
     write /sys/kernel/boot_cdsp/boot 1
