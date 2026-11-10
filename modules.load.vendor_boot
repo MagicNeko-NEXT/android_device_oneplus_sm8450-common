@@ -75,14 +75,14 @@ qcom-reboot-reason.ko
 qrtr.ko
 rtc-pm8xxx.ko
 stub-regulator.ko
+qcom_aoss.ko
+msm_qmp.ko
 tmecom-intf.ko
 qcom_ice.ko
 ufshcd-crypto-qti.ko
 ufs-qcom.ko
 arm_smmu.ko
-qcom_aoss.ko
 mem-offline.ko
-msm_qmp.ko
 simcardnum.ko
 oplus_mdmfeature.ko
 bcl_pmic5.ko
