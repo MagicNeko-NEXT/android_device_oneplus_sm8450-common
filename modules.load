@@ -261,4 +261,3 @@ bt_fm_slim.ko
 radio-i2c-rtc6226-qca.ko
 qca_cld3_qca6490.ko
 camera.ko
-msm-eva.ko
