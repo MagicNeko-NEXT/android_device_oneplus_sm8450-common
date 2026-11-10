@@ -7,6 +7,10 @@ service vendor.bringup_report /vendor/bin/bringup-report.sh
     oneshot
     disabled
 
+on early-init
+    wait /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode 1
+    write /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode peripheral
+
 on init
     start vendor.bringup_report
     setprop persist.sys.debug_enabled 1
@@ -14,6 +18,9 @@ on init
     setprop sys.usb.configfs 1
     setprop sys.usb.controller a600000.dwc3
     setprop vendor.usb.controller a600000.dwc3
+    setprop sys.usb.config adb
+    wait /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode 1
+    write /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode peripheral
     mount configfs none /config
     mkdir /config/usb_gadget/g1 0770 system usb
     mkdir /config/usb_gadget/g1/strings/0x409 0770 system usb
@@ -29,6 +36,7 @@ on init
     mkdir /dev/usb-ffs 0775 shell system
     mkdir /dev/usb-ffs/adb 0770 shell system
     mount functionfs adb /dev/usb-ffs/adb uid=2000,gid=1000,rmode=0770,fmode=0660
+    start adbd
 
 on property:vendor.all.modules.ready=1
     wait /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode 2
@@ -72,6 +80,7 @@ on property:sys.usb.ffs.ready=1
     write /config/usb_gadget/g1/idProduct 0x4ee7
     symlink /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f1
     symlink /config/usb_gadget/g1/configs/b.1 /config/usb_gadget/g1/os_desc/b.1
+    wait /sys/class/udc/a600000.dwc3 5
     write /config/usb_gadget/g1/UDC "none"
     write /config/usb_gadget/g1/UDC a600000.dwc3
     setprop sys.usb.state adb

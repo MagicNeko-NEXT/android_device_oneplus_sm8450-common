@@ -19,26 +19,14 @@ while [ $n -lt 90 ]; do
   if [ -e /sys/bus/platform/devices/a600000.ssusb/mode ]; then
     echo peripheral > /sys/bus/platform/devices/a600000.ssusb/mode 2>/dev/null
   fi
-  UDC_NAME=$(ls /sys/class/udc 2>/dev/null | head -1)
-  if [ -n "$UDC_NAME" ]; then
-    UDC_CUR=$(cat /config/usb_gadget/g1/UDC 2>/dev/null)
-    if [ "$UDC_CUR" != "$UDC_NAME" ]; then
-      mkdir -p /config/usb_gadget/g1/configs/b.1/strings/0x409 2>/dev/null
-      echo "adb" > /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration 2>/dev/null
-      mkdir -p /config/usb_gadget/g1/functions/ffs.adb 2>/dev/null
-      mkdir -p /dev/usb-ffs/adb 2>/dev/null
-      mount -t functionfs adb /dev/usb-ffs/adb 2>/dev/null
-      start adbd 2>/dev/null
-      ln -sf /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f1 2>/dev/null
-      ln -sf /config/usb_gadget/g1/configs/b.1 /config/usb_gadget/g1/os_desc/b.1 2>/dev/null
-      echo 0x18d1 > /config/usb_gadget/g1/idVendor 2>/dev/null
-      echo 0x4ee7 > /config/usb_gadget/g1/idProduct 2>/dev/null
-      echo "" > /config/usb_gadget/g1/UDC 2>/dev/null
-      echo "$UDC_NAME" > /config/usb_gadget/g1/UDC 2>/dev/null
-      setprop sys.usb.controller "$UDC_NAME"
-      setprop sys.usb.config adb
-      setprop sys.usb.state adb
-    fi
+  FFS_READY=$(getprop sys.usb.ffs.ready)
+  UDC_CUR=$(cat /config/usb_gadget/g1/UDC 2>/dev/null)
+  if [ "$FFS_READY" = "1" ] && [ -z "$UDC_CUR" ]; then
+    ln -sf /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f1 2>/dev/null
+    ln -sf /config/usb_gadget/g1/configs/b.1 /config/usb_gadget/g1/os_desc/b.1 2>/dev/null
+    echo 0x18d1 > /config/usb_gadget/g1/idVendor 2>/dev/null
+    echo 0x4ee7 > /config/usb_gadget/g1/idProduct 2>/dev/null
+    echo a600000.dwc3 > /config/usb_gadget/g1/UDC 2>/dev/null
   fi
   # Keep the console quiet (init and drivers keep raising it).
   echo 0 > /sys/module/printk/parameters/ignore_loglevel 2>/dev/null
