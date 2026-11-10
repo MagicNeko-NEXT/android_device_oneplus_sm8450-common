@@ -7,26 +7,34 @@ sleep 25
 mount -t debugfs debugfs /sys/kernel/debug 2>/dev/null
 mount -t configfs none /config 2>/dev/null
 
-T=/dev/tty0
+if [ -e /dev/tty0 ]; then
+  T=/dev/tty0
+else
+  T=/dev/console
+fi
 n=0
 while [ $n -lt 90 ]; do
   n=$((n+1))
   # Ensure ADB gadget is bound if UDC is ready
-  if [ -d /sys/class/udc/a600000.dwc3 ] && [ "$(cat /config/usb_gadget/g1/UDC 2>/dev/null)" != "a600000.dwc3" ]; then
-    mkdir -p /config/usb_gadget/g1/configs/b.1/strings/0x409 2>/dev/null
-    echo "adb" > /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration 2>/dev/null
-    mkdir -p /config/usb_gadget/g1/functions/ffs.adb 2>/dev/null
-    mkdir -p /dev/usb-ffs/adb 2>/dev/null
-    mount -t functionfs adb /dev/usb-ffs/adb 2>/dev/null
-    start adbd 2>/dev/null
-    if [ -e /dev/usb-ffs/adb/ep1 ] || [ "$(getprop sys.usb.ffs.ready)" = "1" ]; then
-      ln -sf /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f1 2>/dev/null
-      ln -sf /config/usb_gadget/g1/configs/b.1 /config/usb_gadget/g1/os_desc/b.1 2>/dev/null
-      echo 0x18d1 > /config/usb_gadget/g1/idVendor 2>/dev/null
-      echo 0x4ee7 > /config/usb_gadget/g1/idProduct 2>/dev/null
-      echo a600000.dwc3 > /config/usb_gadget/g1/UDC 2>/dev/null
-      setprop sys.usb.config adb
-      setprop sys.usb.state adb
+  if [ -d /sys/class/udc/a600000.dwc3 ]; then
+    UDC_CUR=$(cat /config/usb_gadget/g1/UDC 2>/dev/null)
+    if [ "$UDC_CUR" != "a600000.dwc3" ]; then
+      mkdir -p /config/usb_gadget/g1/configs/b.1/strings/0x409 2>/dev/null
+      echo "adb" > /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration 2>/dev/null
+      mkdir -p /config/usb_gadget/g1/functions/ffs.adb 2>/dev/null
+      mkdir -p /dev/usb-ffs/adb 2>/dev/null
+      mount -t functionfs adb /dev/usb-ffs/adb 2>/dev/null
+      start adbd 2>/dev/null
+      if [ -e /dev/usb-ffs/adb/ep1 ] || [ "$(getprop sys.usb.ffs.ready)" = "1" ]; then
+        ln -sf /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f1 2>/dev/null
+        ln -sf /config/usb_gadget/g1/configs/b.1 /config/usb_gadget/g1/os_desc/b.1 2>/dev/null
+        echo 0x18d1 > /config/usb_gadget/g1/idVendor 2>/dev/null
+        echo 0x4ee7 > /config/usb_gadget/g1/idProduct 2>/dev/null
+        echo "" > /config/usb_gadget/g1/UDC 2>/dev/null
+        echo a600000.dwc3 > /config/usb_gadget/g1/UDC 2>/dev/null
+        setprop sys.usb.config adb
+        setprop sys.usb.state adb
+      fi
     fi
   fi
   # Keep the console quiet (init and drivers keep raising it).
