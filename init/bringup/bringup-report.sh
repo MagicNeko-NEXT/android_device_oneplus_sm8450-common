@@ -15,26 +15,29 @@ fi
 n=0
 while [ $n -lt 90 ]; do
   n=$((n+1))
-  # Ensure ADB gadget is bound if UDC is ready
-  if [ -d /sys/class/udc/a600000.dwc3 ]; then
+  # Ensure USB controller is in peripheral mode
+  if [ -e /sys/bus/platform/devices/a600000.ssusb/mode ]; then
+    echo peripheral > /sys/bus/platform/devices/a600000.ssusb/mode 2>/dev/null
+  fi
+  UDC_NAME=$(ls /sys/class/udc 2>/dev/null | head -1)
+  if [ -n "$UDC_NAME" ]; then
     UDC_CUR=$(cat /config/usb_gadget/g1/UDC 2>/dev/null)
-    if [ "$UDC_CUR" != "a600000.dwc3" ]; then
+    if [ "$UDC_CUR" != "$UDC_NAME" ]; then
       mkdir -p /config/usb_gadget/g1/configs/b.1/strings/0x409 2>/dev/null
       echo "adb" > /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration 2>/dev/null
       mkdir -p /config/usb_gadget/g1/functions/ffs.adb 2>/dev/null
       mkdir -p /dev/usb-ffs/adb 2>/dev/null
       mount -t functionfs adb /dev/usb-ffs/adb 2>/dev/null
       start adbd 2>/dev/null
-      if [ -e /dev/usb-ffs/adb/ep1 ] || [ "$(getprop sys.usb.ffs.ready)" = "1" ]; then
-        ln -sf /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f1 2>/dev/null
-        ln -sf /config/usb_gadget/g1/configs/b.1 /config/usb_gadget/g1/os_desc/b.1 2>/dev/null
-        echo 0x18d1 > /config/usb_gadget/g1/idVendor 2>/dev/null
-        echo 0x4ee7 > /config/usb_gadget/g1/idProduct 2>/dev/null
-        echo "" > /config/usb_gadget/g1/UDC 2>/dev/null
-        echo a600000.dwc3 > /config/usb_gadget/g1/UDC 2>/dev/null
-        setprop sys.usb.config adb
-        setprop sys.usb.state adb
-      fi
+      ln -sf /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f1 2>/dev/null
+      ln -sf /config/usb_gadget/g1/configs/b.1 /config/usb_gadget/g1/os_desc/b.1 2>/dev/null
+      echo 0x18d1 > /config/usb_gadget/g1/idVendor 2>/dev/null
+      echo 0x4ee7 > /config/usb_gadget/g1/idProduct 2>/dev/null
+      echo "" > /config/usb_gadget/g1/UDC 2>/dev/null
+      echo "$UDC_NAME" > /config/usb_gadget/g1/UDC 2>/dev/null
+      setprop sys.usb.controller "$UDC_NAME"
+      setprop sys.usb.config adb
+      setprop sys.usb.state adb
     fi
   fi
   # Keep the console quiet (init and drivers keep raising it).
