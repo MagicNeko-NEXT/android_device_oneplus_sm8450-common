@@ -52,7 +52,6 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/init/adb_keys:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/adb_keys \
     $(LOCAL_PATH)/init/adb_keys:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/adb_keys \
-    $(LOCAL_PATH)/init/adb_keys:$(TARGET_COPY_OUT_PRODUCT)/etc/security/adb_keys \
     $(LOCAL_PATH)/init/adb_keys:$(TARGET_COPY_OUT_VENDOR)/etc/security/adb_keys
 endif
 
