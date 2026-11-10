@@ -128,11 +128,9 @@ TARGET_KERNEL_EXT_MODULES := \
     qcom/opensource/bt-kernel \
     qcom/opensource/graphics-kernel \
     qcom/opensource/display-drivers/msm \
-    qcom/opensource/camera-kernel \
-    qcom/opensource/eva-kernel
+    qcom/opensource/camera-kernel
 
 TARGET_KERNEL_DLKM_CAMERA_OVERRIDE := true
-TARGET_KERNEL_DLKM_EVA_OVERRIDE := true
 
 TARGET_KERNEL_EXT_MODULES += \
     oplus/kernel/cpu/thermal:kbuild \
