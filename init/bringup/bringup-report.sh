@@ -5,11 +5,23 @@
 
 sleep 25
 mount -t debugfs debugfs /sys/kernel/debug 2>/dev/null
+mount -t configfs none /config 2>/dev/null
 
 T=/dev/tty0
 n=0
 while [ $n -lt 90 ]; do
   n=$((n+1))
+  # Ensure ADB gadget is bound if UDC is ready
+  if [ -d /sys/class/udc/a600000.dwc3 ] && [ "$(cat /config/usb_gadget/g1/UDC 2>/dev/null)" != "a600000.dwc3" ]; then
+    mkdir -p /config/usb_gadget/g1/configs/b.1/strings/0x409 2>/dev/null
+    echo "adb" > /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration 2>/dev/null
+    ln -sf /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f1 2>/dev/null
+    echo 0x18d1 > /config/usb_gadget/g1/idVendor 2>/dev/null
+    echo 0x4ee7 > /config/usb_gadget/g1/idProduct 2>/dev/null
+    echo a600000.dwc3 > /config/usb_gadget/g1/UDC 2>/dev/null
+    setprop sys.usb.config adb
+    setprop sys.usb.state adb
+  fi
   # Keep the console quiet (init and drivers keep raising it).
   echo 0 > /sys/module/printk/parameters/ignore_loglevel 2>/dev/null
   echo "1 1 1 1" > /proc/sys/kernel/printk 2>/dev/null
