@@ -19,13 +19,22 @@ while [ $n -lt 90 ]; do
   if [ -e /sys/bus/platform/devices/a600000.ssusb/mode ]; then
     echo peripheral > /sys/bus/platform/devices/a600000.ssusb/mode 2>/dev/null
   fi
+  # If UDC is not yet bound and controller is available, bind it
+  UDC_CUR=$(cat /config/usb_gadget/g1/UDC 2>/dev/null)
+  if [ -e /sys/class/udc/a600000.dwc3 ] && [ -z "$UDC_CUR" ]; then
+    ln -sf /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f1 2>/dev/null
+    echo 0x18d1 > /config/usb_gadget/g1/idVendor 2>/dev/null
+    echo 0x4ee7 > /config/usb_gadget/g1/idProduct 2>/dev/null
+    echo a600000.dwc3 > /config/usb_gadget/g1/UDC 2>/dev/null
+    setprop sys.usb.state adb
+  fi
   # Keep the console quiet (init and drivers keep raising it).
   echo 0 > /sys/module/printk/parameters/ignore_loglevel 2>/dev/null
   echo "1 1 1 1" > /proc/sys/kernel/printk 2>/dev/null
   {
     printf '\033[2J\033[H'
     echo "=== BOOT REPORT $n  up $(cut -d' ' -f1 /proc/uptime)  /data=[$(grep -c ' /data ' /proc/mounts)] boot_completed=[$(getprop sys.boot_completed)] ==="
-    echo "USB: udc=[$(ls /sys/class/udc 2>/dev/null)] config=[$(getprop sys.usb.config)] state=[$(getprop sys.usb.state)] adbd=[$(getprop init.svc.adbd)] dwc3_msm=$(grep -c '^dwc3_msm ' /proc/modules)"
+    echo "USB: udc=[$(cat /config/usb_gadget/g1/UDC 2>/dev/null)] dev=[$(ls /sys/class/udc 2>/dev/null)] ffs=[$(getprop sys.usb.ffs.ready)] cfg=[$(getprop sys.usb.config)] st=[$(getprop sys.usb.state)] adbd=[$(getprop init.svc.adbd)]"
     echo "SVC: composer=[$(getprop init.svc.vendor.qti.hardware.display.composer)] allocator=[$(getprop init.svc.vendor.qti.hardware.display.allocator)] sf=[$(getprop init.svc.surfaceflinger)] zygote=[$(getprop init.svc.zygote)] msm_drm=$(grep -c '^msm_drm ' /proc/modules)"
     echo "--- deferred ($(grep -c . /sys/kernel/debug/devices_deferred 2>/dev/null)) ---"
     head -6 /sys/kernel/debug/devices_deferred 2>/dev/null | cut -c1-134
