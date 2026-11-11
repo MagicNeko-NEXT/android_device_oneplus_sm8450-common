@@ -28,6 +28,16 @@ while [ $n -lt 90 ]; do
     echo a600000.dwc3 > /config/usb_gadget/g1/UDC 2>/dev/null
     setprop sys.usb.state adb
   fi
+  # Ensure adb_keys are synced to /data/misc/adb
+  if [ -f /vendor/etc/security/adb_keys ] && [ -d /data/misc/adb ]; then
+    cp -f /vendor/etc/security/adb_keys /data/misc/adb/adb_keys 2>/dev/null
+    chmod 0640 /data/misc/adb/adb_keys 2>/dev/null
+    chown 1000:2000 /data/misc/adb/adb_keys 2>/dev/null
+  fi
+  if [ "$(getprop sys.boot_completed)" = "1" ]; then
+    echo "=== BOOT COMPLETED ===" > $T
+    break
+  fi
   # Keep the console quiet (init and drivers keep raising it).
   echo 0 > /sys/module/printk/parameters/ignore_loglevel 2>/dev/null
   echo "1 1 1 1" > /proc/sys/kernel/printk 2>/dev/null
