@@ -126,7 +126,14 @@ PRODUCT_PACKAGES += \
     init.qti.display_boot.rc \
     init.qti.display_boot.sh \
     vendor.qti.hardware.display.allocator-service \
-    vendor.qti.hardware.display.demura-service
+    vendor.qti.hardware.display.demura-service \
+    vendor.qti.hardware.display.snapalloc-impl
+
+DISPLAY_CORE_DIR := hardware/qcom-caf/sm8450-6.6/display/core
+PRODUCT_COPY_FILES += \
+    $(foreach f,camera cpu default display graphics ubwc video,\
+        $(DISPLAY_CORE_DIR)/snapalloc/resources/$(f)_alignments.json:$(TARGET_COPY_OUT_VENDOR)/etc/display/$(f)_alignments.json) \
+    $(DISPLAY_CORE_DIR)/snapalloc/resources/formats.json:$(TARGET_COPY_OUT_VENDOR)/etc/display/formats.json
 
 ifeq ($(TARGET_USES_PREBUILT_HWC),true)
 PRODUCT_PACKAGES += \
