@@ -3,7 +3,7 @@
 # so a boot without USB can still be read from a photo. Starts at init. Kernel
 # messages stop going to the panel; they stay in dmesg.
 
-sleep 25
+sleep 2
 mount -t debugfs debugfs /sys/kernel/debug 2>/dev/null
 mount -t configfs none /config 2>/dev/null
 

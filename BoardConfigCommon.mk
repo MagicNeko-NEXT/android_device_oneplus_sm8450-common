@@ -90,7 +90,7 @@ BOARD_KERNEL_CMDLINE += deferred_probe_timeout=2
 ifeq ($(TARGET_BUILD_VARIANT),userdebug)
 TARGET_KERNEL_CONFIG += vendor/oplus/bringup_debug.config
 # Keep bootloader display clocks and power domains on so splash and fbcon stay lit before msm_drm takes over.
-BOARD_KERNEL_CMDLINE += console=tty0 ignore_loglevel printk.devkmsg=on clk_ignore_unused pd_ignore_unused
+BOARD_KERNEL_CMDLINE += console=tty0 printk.devkmsg=on clk_ignore_unused pd_ignore_unused
 # Bring-up: run SELinux permissive so denials are logged but don't hide failures.
 BOARD_BOOTCONFIG += androidboot.selinux=permissive
 endif

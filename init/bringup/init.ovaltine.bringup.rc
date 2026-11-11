@@ -63,17 +63,10 @@ on property:vendor.all.modules.ready=1 && property:sys.usb.ffs.ready=1
     setprop sys.usb.state adb
 
 on early-boot
-    write /sys/kernel/boot_adsp/boot 1
-    write /sys/kernel/boot_cdsp/boot 1
     wait /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode 2
     write /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode peripheral
-    chmod 0664 /sys/kernel/snd_card/card_state
-    chown audioserver audio /sys/kernel/snd_card/card_state
-    write /sys/kernel/snd_card/card_state 1
 
 on boot
-    write /sys/kernel/boot_adsp/boot 1
-    write /sys/kernel/boot_cdsp/boot 1
     wait /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode 2
     write /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode peripheral
     wait /sys/class/udc/a600000.dwc3 2
@@ -83,9 +76,6 @@ on boot
     setprop sys.usb.config adb
     start adbd
     setprop service.adb.root 1
-    chmod 0664 /sys/kernel/snd_card/card_state
-    chown audioserver audio /sys/kernel/snd_card/card_state
-    write /sys/kernel/snd_card/card_state 1
 
 on property:sys.usb.ffs.ready=1
     write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "adb"
