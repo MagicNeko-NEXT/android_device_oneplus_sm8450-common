@@ -388,9 +388,10 @@ vendor/etc/ltm_config_samsung_S6E3HC3_dsc_cmd_mode_panel.xml|ca9ad48a7e0b721c59d
 vendor/etc/ltm_config_samsung_S6E3HC3_dsc_cmd_mode_panel_21631.xml|cb47c0abc03e06371d1d083d8f0813eced24fb6c
 
 # Display postprocessing
-vendor/bin/hw/vendor.display.color@1.0-service|daa3a8bc5e1c5f3f6770eff66ee9be9c7da2c7ea
+# 6.6: the stock color service only serves libsdm-color, which is left out above.
+#vendor/bin/hw/vendor.display.color@1.0-service|daa3a8bc5e1c5f3f6770eff66ee9be9c7da2c7ea
 vendor/bin/ppd|7c7c7ea24717c518bc4a768fb606b9a2ab72e16e
-vendor/etc/init/vendor.display.color@1.0-service.rc|5ad673f879b3685a0e79b5633437e5499cb94f48
+#vendor/etc/init/vendor.display.color@1.0-service.rc|5ad673f879b3685a0e79b5633437e5499cb94f48
 vendor/lib64/libdisp-aba.so|a0f0d57b3a2823cf50181af38a8a33555b63d67c
 vendor/lib64/vendor.display.color@1.0.so|2b4b4abd80805ca0bee6ed03becc807e9294c374
 vendor/lib64/vendor.display.color@1.1.so|d66e9fbcf148ff55d1356a7652f423d96d1d077b
