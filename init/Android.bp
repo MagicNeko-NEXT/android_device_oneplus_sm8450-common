@@ -102,9 +102,16 @@ sh_binary {
     vendor: true,
 }
 
+// Bring-up only: on-screen boot report, installed on userdebug builds.
 prebuilt_etc {
-    name: "init.ovaltine.usb.rc",
-    src: "usb/init.ovaltine.usb.rc",
+    name: "init.ovaltine.bringup.rc",
+    src: "bringup/init.ovaltine.bringup.rc",
     sub_dir: "init",
+    vendor: true,
+}
+
+sh_binary {
+    name: "bringup-report.sh",
+    src: "bringup/bringup-report.sh",
     vendor: true,
 }
