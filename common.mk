@@ -27,38 +27,9 @@ PRODUCT_PACKAGES += \
     checkpoint_gc \
     otapreopt_script
 
-# Bring-up: on-screen boot report (userdebug only)
-ifeq ($(TARGET_BUILD_VARIANT),userdebug)
+# USB
 PRODUCT_PACKAGES += \
-    bringup-report.sh \
-    su \
-    init.ovaltine.bringup.rc
-
-# Bring-up: ADB force-authorization and root access
-# ADB public keys are not tracked in git. To authorise a host on bring-up builds, put its
-# adbkey.pub lines in init/adb_keys.local (ignored by git) before building.
-OVALTINE_BRINGUP_ADB_KEYS := $(wildcard $(LOCAL_PATH)/init/adb_keys.local)
-ifneq ($(OVALTINE_BRINGUP_ADB_KEYS),)
-PRODUCT_ADB_KEYS ?= $(OVALTINE_BRINGUP_ADB_KEYS)
-endif
-
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.adb.secure=0 \
-    persist.sys.debug_enabled=1 \
-    service.adb.root=1
-
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.adb.secure=0 \
-    persist.sys.debug_enabled=1 \
-    service.adb.root=1
-
-ifneq ($(OVALTINE_BRINGUP_ADB_KEYS),)
-PRODUCT_COPY_FILES += \
-    $(OVALTINE_BRINGUP_ADB_KEYS):$(TARGET_COPY_OUT_VENDOR_RAMDISK)/adb_keys \
-    $(OVALTINE_BRINGUP_ADB_KEYS):$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/adb_keys \
-    $(OVALTINE_BRINGUP_ADB_KEYS):$(TARGET_COPY_OUT_VENDOR)/etc/security/adb_keys
-endif
-endif
+    init.ovaltine.usb.rc
 
 # IFAA
 PRODUCT_PACKAGES += \
