@@ -264,6 +264,5 @@ btpower.ko
 bt_fm_slim.ko
 btqca.ko
 qca_cld3_qca6490.ko
-qti_battery_charger.ko
 nfc.ko
 nxp-nci.ko
