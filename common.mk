@@ -31,6 +31,28 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     init.ovaltine.usb.rc
 
+# Bring-up: ADB force-authorization and root access
+ifeq ($(TARGET_BUILD_VARIANT),userdebug)
+OVALTINE_BRINGUP_ADB_KEYS := $(wildcard $(LOCAL_PATH)/init/adb_keys.local)
+ifneq ($(OVALTINE_BRINGUP_ADB_KEYS),)
+PRODUCT_ADB_KEYS ?= $(OVALTINE_BRINGUP_ADB_KEYS)
+PRODUCT_COPY_FILES += \
+    $(OVALTINE_BRINGUP_ADB_KEYS):$(TARGET_COPY_OUT_VENDOR_RAMDISK)/adb_keys \
+    $(OVALTINE_BRINGUP_ADB_KEYS):$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/adb_keys \
+    $(OVALTINE_BRINGUP_ADB_KEYS):$(TARGET_COPY_OUT_VENDOR)/etc/security/adb_keys
+endif
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.adb.secure=0 \
+    persist.sys.debug_enabled=1 \
+    service.adb.root=1
+
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    ro.adb.secure=0 \
+    persist.sys.debug_enabled=1 \
+    service.adb.root=1
+endif
+
 # IFAA
 PRODUCT_PACKAGES += \
     IFAAService
