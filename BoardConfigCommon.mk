@@ -88,10 +88,6 @@ TARGET_KERNEL_CONFIG := gki_defconfig vendor/waipio_perf.config vendor/oplus/wai
 BOARD_KERNEL_CMDLINE += deferred_probe_timeout=2
 # Keep the bootloader display clocks and power domains on until msm_drm takes over.
 BOARD_KERNEL_CMDLINE += clk_ignore_unused pd_ignore_unused
-ifeq ($(TARGET_BUILD_VARIANT),userdebug)
-# Bring-up: run SELinux permissive so denials are logged but don't hide failures.
-BOARD_BOOTCONFIG += androidboot.selinux=permissive
-endif
 
 # Kernel modules
 BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE := $(TARGET_KERNEL_SOURCE)/modules.vendor_blocklist.msm.waipio
