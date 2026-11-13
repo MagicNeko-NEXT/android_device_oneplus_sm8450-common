@@ -11,3 +11,6 @@
 # The ICD switcher and its image-default config.
 /vendor/lib(64)?/hw/vulkan\.switcher\.so    u:object_r:same_process_hal_file:s0
 
+# QSPM same-process HAL library (dropped from sm8450-6.6 sepolicy_vndr).
+/vendor/lib(64)?/vendor\.qti\.qspmhal@1\.0\.so    u:object_r:same_process_hal_file:s0
+
