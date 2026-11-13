@@ -1,0 +1,4 @@
+hal_client_domain(priv_app_36, vendor_hal_qspmhal)
+
+dontaudit bootanim vendor_hal_qspmhal_default:binder call;
+dontaudit surfaceflinger vendor_hal_qspmhal_default:binder call;

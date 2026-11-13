@@ -1,0 +1,25 @@
+allow vendor_lowirpcd_service device:dir { read open watch getattr };
+
+# Dart/Flutter VM reads /proc/sys/vm/max_map_count
+allow untrusted_app proc_max_map_count:file r_file_perms;
+
+# post_boot kswapd/kcompactd lookup & scripts
+dontaudit vendor_qti_init_shell init:dir { getattr search };
+dontaudit vendor_qti_init_shell init:file r_file_perms;
+dontaudit vendor_qti_init_shell kernel:dir { getattr search };
+dontaudit vendor_qti_init_shell kernel:file r_file_perms;
+dontaudit vendor_qti_init_shell proc_pid_max:file r_file_perms;
+dontaudit vendor_qti_init_shell self:capability sys_ptrace;
+dontaudit vendor_qti_init_shell firmware_file:filesystem getattr;
+dontaudit vendor_qti_init_shell metadata_file:dir getattr;
+dontaudit vendor_qti_init_shell system_userdir_file:dir { getattr search };
+dontaudit vendor_qti_init_shell system_data_file:dir getattr;
+dontaudit vendor_qti_init_shell { vendor_custom_ab_block_device vendor_persist_block_device vendor_qmcs_block_device }:blk_file getattr;
+dontaudit vendor_qti_init_shell vendor_qmcs_file:filesystem getattr;
+
+# Permissive-only bulk property enumeration & harmless stat probes
+dontaudit hal_camera_default { vendor_property_type -vendor_camera_prop }:file r_file_perms;
+dontaudit priv_app_36 metadata_file:dir { open getattr };
+dontaudit priv_app_36 proc_version:file { open getattr };
+dontaudit priv_app_all device:dir open;
+dontaudit { system_server system_app untrusted_app } vendor_default_prop:file r_file_perms;
