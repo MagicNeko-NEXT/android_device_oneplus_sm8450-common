@@ -261,6 +261,9 @@ oplus_network_sim_detect.ko
 oplus_network_rf_cable_monitor.ko
 oplus_secure_common.ko
 oplus_bsp_uff_fp_driver.ko
+oplus_sensor_deviceinfo_5.10.ko
+oplus_sensor_feedback.ko
+oplus_sensor_interact.ko
 camera.ko
 msm-eva.ko
 msm_video.ko
