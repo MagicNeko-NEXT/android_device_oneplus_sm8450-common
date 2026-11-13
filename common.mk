@@ -88,7 +88,8 @@ PRODUCT_PACKAGES += \
     libqcomvoiceprocessing \
     libreverbwrapper \
     libvisualizer \
-    libvolumelistener
+    libvolumelistener \
+    qtiaudiohalvendorextn
 
 AUDIO_HAL_DIR := hardware/qcom-caf/sm8450-6.6/audio/primary-hal
 QCV_FAMILY_SKUS := cape taro
