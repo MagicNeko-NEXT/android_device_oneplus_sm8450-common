@@ -168,7 +168,7 @@ endif
 
 # DPPS runtime dependency: libdpps.so's DT_NEEDED is libtinyxml2-v34.so (OOS16 generation blob).
 # hardware/lineage/compat already has this VNDK-34 prebuilt (vndk/v34/arm64),
-# but LineageOS/crDroid don't install it by default; libdpps loads via dlopen, so the build can't see the dependency,
+# it isn't installed by default; libdpps loads via dlopen, so the build can't see the dependency,
 # and without an explicit install the load fails silently and DPPS degrades to Dummy.
 PRODUCT_PACKAGES += \
     libtinyxml2-v34
@@ -313,9 +313,6 @@ PRODUCT_PACKAGES += \
 # Overlays
 $(call inherit-product, hardware/oplus/overlay/generic/generic.mk)
 $(call inherit-product, hardware/oplus/overlay/qssi/qssi.mk)
-
-DEVICE_PACKAGE_OVERLAYS += \
-    $(LOCAL_PATH)/overlay-lineage
 
 PRODUCT_ENFORCE_RRO_TARGETS := *
 PRODUCT_PACKAGES += \
