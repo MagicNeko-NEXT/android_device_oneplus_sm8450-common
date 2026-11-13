@@ -60,8 +60,6 @@ blob_fixups: blob_fixups_user_type = {
         .replace_needed('libdisplayconfig.qti.so', 'libdisplayconfig.stock.so'),
     'vendor/lib64/libpsmoptfeature.so': blob_fixup()
         .replace_needed('libdisplayconfig.qti.so', 'libdisplayconfig.stock.so'),
-    'vendor/lib64/libqcodec2_utils.so': blob_fixup()
-        .replace_needed('libdisplayconfig.qti.so', 'libdisplayconfig.stock.so'),
     'vendor/lib64/libqti-perfd.so': blob_fixup()
         .replace_needed('libdisplayconfig.qti.so', 'libdisplayconfig.stock.so'),
     'vendor/lib64/libvendorscenariopoweroptfeature.so': blob_fixup()
@@ -93,8 +91,33 @@ blob_fixups: blob_fixups_user_type = {
         .apktool_patch('blob-patches/PowerOffAlarm.patch'),
     'product/etc/sysconfig/com.android.hotwordenrollment.common.util.xml': blob_fixup()
         .regex_replace('/my_product', '/product'),
+    (
+        'vendor/bin/hw/vendor.qti.media.c2@1.0-service',
+        'vendor/bin/hw/vendor.qti.media.c2audio@1.0-service',
+    ): blob_fixup()
+        .sig_replace(
+            '00 2a 80 52',
+            '00 2c 80 52',
+        ),
+    'vendor/etc/vintf/manifest/c2_manifest_vendor.xml': blob_fixup()
+        .regex_replace('.+dolby.+\n', '')
+        .regex_replace('format="hidl"', 'format="aidl"')
+        .regex_replace('.+<(transport|version)>.+\n', '')
+        .regex_replace('.+<instance>software</instance>\n', ''),
+    'vendor/lib64/libqcodec2_core.so': blob_fixup()
+        .replace_needed('android.hardware.graphics.common-V5-ndk.so', 'android.hardware.graphics.common-V7-ndk.so'),
+    'vendor/lib64/hw/vulkan.adreno.so': blob_fixup()
+        .binary_regex_replace(
+            b'\x03\x80\x94\x70\x12\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00',
+            b'\x03\x80\x10\x70\x12\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00',
+        )
+        .binary_regex_replace(
+            b'\x03\x80\x94\x70\x12\x00\x00\x00\x03\x00\x00\x00\x00\x00\x00\x00',
+            b'\x03\x80\x10\x70\x12\x00\x00\x00\x03\x00\x00\x00\x00\x00\x00\x00',
+        ),
     ('vendor/etc/media_cape/video_system_specs.json', 'vendor/etc/media_taro/video_system_specs.json'): blob_fixup()
-        .regex_replace('"max_retry_alloc_output_timeout": 10000,', '"max_retry_alloc_output_timeout": 0,'),
+        .regex_replace('"max_retry_alloc_output_timeout": 10000,', '"max_retry_alloc_output_timeout": 0,')
+        .regex_replace('.*"libqc2vppfilter.so"\n', ''),
     ('vendor/etc/media_codecs_cape.xml', 'vendor/etc/media_codecs_cape_vendor.xml', 'vendor/etc/media_codecs_taro.xml', 'vendor/etc/media_codecs_taro_vendor.xml'): blob_fixup()
         .regex_replace('.*media_codecs_(google_audio|google_c2|google_telephony|vendor_audio).*\n', ''),
     'vendor/etc/msm_irqbalance.conf': blob_fixup()
