@@ -259,6 +259,8 @@ oplus_ipa_thermal.ko
 oplus_network_oem_qmi.ko
 oplus_network_sim_detect.ko
 oplus_network_rf_cable_monitor.ko
+oplus_secure_common.ko
+oplus_bsp_uff_fp_driver.ko
 camera.ko
 msm-eva.ko
 msm_video.ko
