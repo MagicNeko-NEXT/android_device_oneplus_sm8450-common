@@ -143,7 +143,8 @@ qcom-hv-haptics.ko
 i2c-msm-geni.ko
 pinctrl-msm.ko
 i3c-master-msm-geni.ko
-ipclite.ko
+qcom_ipc_lite.ko
+synx-driver.ko
 reboot-mode.ko
 qcom-pon.ko
 oplus_chg.ko
@@ -251,6 +252,8 @@ oplus_network_oem_qmi.ko
 oplus_network_sim_detect.ko
 oplus_network_rf_cable_monitor.ko
 camera.ko
+msm-eva.ko
+msm_video.ko
 cfg80211.ko
 rfkill.ko
 bluetooth.ko

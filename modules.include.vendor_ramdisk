@@ -141,7 +141,7 @@ qcom-hv-haptics.ko
 i2c-msm-geni.ko
 pinctrl-msm.ko
 i3c-master-msm-geni.ko
-ipclite.ko
+qcom_ipc_lite.ko
 synx-driver.ko
 reboot-mode.ko
 qcom-pon.ko

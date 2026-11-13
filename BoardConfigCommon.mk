@@ -107,7 +107,7 @@ TARGET_KERNEL_EXT_MODULES := \
     qcom/opensource/mm-drivers/msm_ext_display \
     qcom/opensource/mm-drivers/hw_fence \
     qcom/opensource/mm-drivers/sync_fence \
-    qcom/opensource/synx-kernel \
+    qcom/opensource/synx-kernel-v1 \
     qcom/opensource/securemsm-kernel \
     qcom/opensource/dsp-kernel \
     qcom/opensource/audio-kernel \
@@ -127,6 +127,8 @@ TARGET_KERNEL_EXT_MODULES := \
     qcom/opensource/graphics-kernel \
     qcom/opensource/display-drivers/msm \
     qcom/opensource/camera-kernel \
+    qcom/opensource/eva-kernel-v1 \
+    qcom/opensource/video-driver \
     nxp/opensource/driver
 
 TARGET_KERNEL_DLKM_CAMERA_OVERRIDE := true
