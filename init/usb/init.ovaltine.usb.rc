@@ -40,8 +40,6 @@ on early-boot
 on boot
     wait /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode 2
     write /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode peripheral
-    setprop sys.usb.config adb
-    start adbd
 
 # The UDC only exists once the dwc3 modules are loaded, which can be after adbd
 # already opened its functionfs endpoints. Bind again once it is there.
