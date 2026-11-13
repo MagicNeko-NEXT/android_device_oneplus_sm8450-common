@@ -2,7 +2,6 @@
 aaudio.hw_burst_min_usec=2000
 aaudio.mmap_exclusive_policy=2
 aaudio.mmap_policy=2
-af.fast_track_multiplier=1
 audio.offload.video=true
 persist.vendor.audio.avs.afe_api_version=2
 persist.vendor.audio.fluence.speaker=true
